@@ -1,0 +1,39 @@
+body {background: }
+
+p {
+    font-size: 20px;
+}
+
+#GameName{
+    position: absolute;
+    top: 25px;
+    left: 50px;
+    font-size: 100%
+}
+
+
+
+#Config{
+    position: absolute;
+    top: 450px;
+    left: 50px;
+    font-size: 50%
+}
+
+
+#Access{
+    position: absolute;
+    top: 200px;
+    left: 50px;
+}
+
+#Status{
+    position: absolute;
+    width: 500px;
+    height: 100px;
+    top: 200px;
+    left: 500px;
+    border: 1px solid black;
+}
+
+
