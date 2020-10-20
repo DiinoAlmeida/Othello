@@ -1,16 +1,18 @@
-body {background: }
+body {
+    background:
+}
 
 
 
-#GameName{
-    font-family: "Keraleeyam"; 
+#GameName {
+    font-family: "Keraleeyam";
     font-size: 50px;
     position: absolute;
     top: 25px;
     left: 50px;
 }
 
-#Config{
+#Config {
     display: none;
     position: absolute;
     top: 450px;
@@ -18,13 +20,13 @@ body {background: }
     font-size: 15px
 }
 
-#Access{
+#Access {
     position: absolute;
     top: 70px;
     left: 1400px;
 }
 
-#Status{
+#Status {
     display: none;
     position: absolute;
     top: 100px;
@@ -34,10 +36,10 @@ body {background: }
     padding-left: 10px;
 }
 
-.board{
+.board {
     display: flex;
     flex-wrap: wrap;
-    align-content:flex-start;
+    align-content: flex-start;
     position: absolute;
     top: 300px;
     left: 650px;
@@ -46,7 +48,7 @@ body {background: }
     border: 1px solid black;
 }
 
-.square{
+.square {
     width: 60px;
     height: 60px;
     background-color: skyblue;
