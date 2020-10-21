@@ -20,9 +20,37 @@
         <p><img src="key.png"> <input type=password></p>
         <button onclick="gameon()">Login</button>
     </div>
+    <!-- Botao das regras-->
+    <button id="myBtn">Regras do Othello</button>
+
+    <!-- Caixa de diálogo com as regras-->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <ul><h2>Objetivo do jogo</h2>
+          <li>O objetivo do jogo é ter a maioria dos discos da sua cor com a face virada para cima no tabuleiro ao fim da partida.</li>
+        </ul>
+        <ul><h2>Regras do jogo</h2>
+          <li>O jogador dos discos pretos joga sempre primeiro.</li>
+          <li>Se um jogador não puder flanquear e virar ao menos um disco do oponente,
+            ele perde a vez e seu oponente joga outra vez. Entretanto, se o lance é possível o jogador não pode passar sua vez.</li>
+          <li>Um disco pode flanquear vários discos em uma ou mais linhas em várias direções ao mesmo tempo – horizontal,
+            vertical ou diagonal. Uma “linha” é definida como um ou mais discos em uma linha reta contínua.</li>
+          <li>Um jogador não pode passar por cima do disco de sua cor(s) para flanquear um disco oposto a ele.</li>
+          <li>O(s) disco(s) deve(m) ser flanqueados(s) como resultado direto de uma jogada sendo virado(s) na linha do disco posicionado.</li>
+          <li>Todos os discos flanqueados em qualquer movimento devem ser virados, mesmo que fosse uma vantagem para o jogador não virá-los.</li>
+          <li>Uma vez que um disco é colocado em um quadrado, ele nunca poderá ser movido para outro quadrado mais tarde no jogo.</li>
+          <li>Quando não há mais possibilidade de movimento para ambos os jogadores,
+            o jogo termina. Os discos são contados e o jogador com a maioria dos discos da sua cor é o vencedor da partida.</li>
+        </ul>
+        <ul><h2>Nota:</h2>
+        <li>É possível que um jogo termine antes que de todas as 64 casa sejam preenchidas.</li>
+        </ul>
+      </div>
+    </div>
 
     <div id="Config">
-        <h1>Background:</h1>
+        <h1>Cor do jogador:</h1>
         <p> Dark: <input type="checkbox"> Light: <input type="checkbox"> </p>
 
         <h1>Adversário: </h1>

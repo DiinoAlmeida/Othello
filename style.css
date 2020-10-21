@@ -2,7 +2,50 @@ body {
     background:
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
 
+#myBtn{
+  display: none;
+  position: absolute;
+  margin-top:400px;
+  margin-left:50px;
+  font-size:15px;
+}
+
+.modal-content {
+  height:60%;
+  overflow: auto;
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 30px;
+  border: 1px solid #888;
+  border-radius: 15px;
+  width: 40%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 
 #GameName {
     font-family: "Keraleeyam";
@@ -20,10 +63,18 @@ body {
     font-size: 15px
 }
 
+#Rules{
+  display:none;
+  position: absolute;
+  top: 400px;
+  left: 50px;
+  font-size: 15px;
+}
+
 #Access {
     position: absolute;
     top: 70px;
-    left: 1400px;
+    left: 1300px;
 }
 
 #Status {
