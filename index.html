@@ -52,14 +52,21 @@
     
     <div id="Config">
         <h1>Cor do jogador:</h1>
-        <p> Dark: <input type="checkbox"> Light: <input type="checkbox"> </p>
+        <p> Preto <input type="radio" name = "Cor" value= "Preto"> 
+            Branco <input type="radio" name = "Cor" value="Branco"> 
+        </p>
 
         <h1>Adversário: </h1>
-        <p>Jogador <input type="checkbox"> Computador <input type="checkbox"> </p>
+        <p>Jogador <input type="radio" name="Adversario" value = "Jogador"> 
+            Computador <input type="radio" name="Adversario" value="Computador"> 
+        </p>
 
         <h1>Dificuldade:</h1>
-        <p>Fácil <input type="checkbox"> Médio <input type="checkbox"> Difícil <input type="checkbox"> </p>
-        <button>Vamos Jogar</button>
+        <p>Fácil <input type="radio" name="Dificuldade" value="Facil"> 
+            Médio <input type="radio" name="Dificuldade" value="Medio"> 
+            Difícil <input type="radio" name="Dificuldade" value="Dificil"> 
+        </p>
+        <button onclick = submit()>Vamos Jogar</button>
     </div>
 
     <div id="Status">
