@@ -26,12 +26,6 @@ window.onclick = function (event) {
 
 
 
-
-
-
-
-
-
 /*
     PlayersPos [] -> indica o "dono" de cada quadrado. Vai ser usado para decidir se há jogadas possíveis ou não.
     
@@ -54,7 +48,23 @@ class Player {
 
 }
 
-var PosColor = new Array(64);
+//Create a 2d array and set every position equal to null
+var PosColor = new Array(8);
+
+for(let i = 0; i < 8; i++){
+    PosColor[i] = new Array(8);
+}
+
+for(let i = 0; i < 8 ; i++){
+    for(let j = 0; j < 8; j++){
+     PosColor[i][j] = "null";   
+    }
+}
+
+//console.log(PosColor);
+
+
+
 var Player1 = new Player(1, 2);
 var Player2 = new Player(2, 2);
 var cells;
@@ -67,9 +77,7 @@ function submit() {
     radioAdeversario = document.getElementsByName("Adversario");
     radioDificuldade = document.getElementsByName("Dificuldade");
 
-    console.log(radioCor);
-
-    if (radioCor[0].cheked) {
+    if (radioCor[0].checked) {
         Player1.cor = "black";
         Player2.cor = "white";
         Turn = Player1;
@@ -80,30 +88,24 @@ function submit() {
         Turn = Player2;
         bestMove();
     }
-
-    console.log(Turn);
 }
 
-
-for (let i = 0; i < 64; i++) {
-    PosColor[i] = "null";
-}
 
 //Cores iniciais
-PosColor[28] = "white";
-PosColor[35] = "white";
-PosColor[27] = "black";
-PosColor[36] = "black";
+PosColor[3][3] = "white";
+PosColor[4][4] = "white";
+PosColor[3][4] = "black";
+PosColor[4][3] = "black";
+PosColor[2][2] = PosColor[2][3] = PosColor[2][4] = PosColor[2][5] = PosColor[3][2] = PosColor[3][5] = PosColor[4][2] = PosColor[4][5] = PosColor[5][2] = PosColor[5][3] = PosColor[5][4] = PosColor[5][5] = "possivel";
 
-//console.log(PlayersPos);
+//console.log(PosColor);
 
 function gameon() {
-    "use strict";
+    "use strict";  //????
     document.getElementById("Status").style.display = 'block';
     document.getElementById("Config").style.display = 'block';
     document.getElementById("myBtn").style.display = 'block';
 
-    /*const board = document.getElementsByClassName("board");*/
     const board = document.createElement("div");
     board.className = "board";
 
@@ -111,6 +113,7 @@ function gameon() {
         const square = document.createElement("div");
         square.className = "square";
         square.id = i;
+
         board.appendChild(square);
     }
 
@@ -134,44 +137,250 @@ function gameon() {
 
 
 function bestMove() {
-    let i = 0;
 
-    while (PosColor[i] != "null") {
-        i++;
+    for(let i = 0; i <= 7; i++){
+        for(let j = 0; j <= 7;  j++){
+            console.log("i: " + i);
+            console.log("j: " + j);
+            if(PosColor[i][j] == "possivel" && analiseNeighbors(i, j) ==  1){
+            cells[returnId(i,j)].removeEventListener('click', turnClick);
+                return;
+            }
+        }
     }
-
-    document.getElementById(i).style.backgroundColor = Player2.cor;
-    PosColor[i] = Player2.cor;
-    Player2.Npecas++;
-    cells[i].removeEventListener('click', turnClick);
 }
 
 
 function turnClick(square) {
 
-    //if (itspossible()) {
-
     if (Turn == Player2) {
         bestMove();
-        document.getElementById(square.target.id).style.backgroundColor = Turn.cor;
-        PosColor[square.target.id] = Turn.cor;
-
-        Turn.Npecas++;
+        swapTurn();
+        playMove(square.target.id);
+    }else{
+        if(playMove(square.target.id) == 1){
         console.log(Turn);
-    } else {
-        document.getElementById(square.target.id).style.backgroundColor = Turn.cor;
-        PosColor[square.target.id] = Turn.cor;
-
-        Turn.Npecas++;
-        console.log(Turn);
+        swapTurn();
+            console.log(Turn);
         bestMove();
-
+        }
     }
-    //}
 }
 
 //Esta função vai decidir se onde clicamos é possivel jogar ou nao consoante as regras
-function itspossible() {
+//Se mudar alguma peça do adversário retorna 1 caso contrário retorna -1
+function playMove(indice) {
+    
+    let status = -1;
+    
+    //find line and collumn of indice
+    let count = 0;
+    while(indice > 7){
+        indice -= 8;
+        count++;
+    }
+    
+    if(PosColor[count][indice] == "possivel"){
+        status = analiseNeighbors(count, indice); 
+    }
+    
+    return status;
+} 
 
 
+//Não está beeemm!!
+//Se mudar alguma peça do adversário retorna 1 caso contrário retorna -1
+//Pode ser otimizada de modo a libertar recursos mas funciona
+function analiseNeighbors(i, j){
+    
+    let status = -1; 
+    let z;
+    
+    //Vertical up 
+    for(let x = i; x >= 0 ; x--){
+        if(PosColor[x][j] == Turn.cor && (i - x) > 1){ //Testar cor das peças
+            while(x <= i){ //corrigir cor do meio.
+                z = returnId(x,j);     document.getElementById(z).style.backgroundColor = Turn.cor;
+                PosColor[x][j] = Turn.cor;
+                Turn.Npecas++;
+                x++;
+            }        
+            status = 1;
+            break;
+        }
+    }
+    
+    //Vertical down
+     for(let x = i; x <= 7 ; x++){
+        if(PosColor[x][j] == Turn.cor && (x - i) > 1){ //Testar cor das peças
+            while(x >= i){ //corrigir cor do meio.
+                z = returnId(x,j);
+                document.getElementById(z).style.backgroundColor = Turn.cor;
+                PosColor[x][j] = Turn.cor;
+                Turn.Npecas++;
+                x--;
+            }        
+            status = 1;
+            break;
+        }
+    }
+    
+    //Horizontal left
+    for(let x = j; x >= 0 ; x--){
+        if(PosColor[i][x] == Turn.cor && (j-x) > 1){ //Testar cor das peças
+            while(x <= j){ //corrigir cor do meio.
+                z = returnId(i,x);
+                document.getElementById(z).style.backgroundColor = Turn.cor;
+                PosColor[i][x] = Turn.cor;
+                Turn.Npecas++;
+                x++;
+            }        
+            status = 1;
+            break;
+        }
+    }
+    
+    
+    
+    //Horizontal right
+     for(let x = j; x <= 7 ; x++){
+        if(PosColor[i][x] == Turn.cor && (x - j) > 1){ //Testar cor das peças
+            while(x >= j){ //corrigir cor do meio.
+                z = returnId(i,x);
+                document.getElementById(z).style.backgroundColor = Turn.cor;
+                PosColor[i][x] = Turn.cor;
+                Turn.Npecas++;
+                x--;
+            }        
+            status = 1;
+            break;
+        }
+    }
+    
+    
+    
+    let x = i, y = j;
+    
+    //Diagonal up right
+    while((x >= 0) && (y<=7)){ //Testar cor das peças
+        if(PosColor[x][y] == Turn.cor && (i-x) > 1 && (y-j) > 1){
+             while((x <= i) && (y >=j)){ //corrigir cor do meio.
+                z = returnId(x,y);
+                document.getElementById(z).style.backgroundColor = Turn.cor;
+                PosColor[x][y] = Turn.cor;
+                Turn.Npecas++;
+                x++;
+                y--;
+            }    
+            status = 1;
+            break;
+        }
+        x--;
+        y++;
+    }
+    
+    x = i, y = j;
+    
+    //Diagonal up left
+    while((x >= 0) && (y>=0)){ //Testar cor das peças
+        if(PosColor[x][y] == Turn.cor && (i-x) > 1 && (j-y) > 1){
+             while((x <= i) && (y >= j)){ //corrigir cor do meio.
+                z = returnId(x,y);
+                document.getElementById(z).style.backgroundColor = Turn.cor;
+                PosColor[x][y] = Turn.cor;
+                Turn.Npecas++;
+                x++;
+                y++;
+            }
+            status = 1;
+            break;
+        }
+        x--;
+        y--;
+    }
+    
+    x = i, y = j;
+    
+    //Diagonal down right
+    while((x <= 7) && (y<=7)){ //Testar cor das peças
+        if(PosColor[x][y] == Turn.cor && (x-i) > 1 && (y-j) > 1){
+             while((x >= i) && (y >=j)){ //corrigir cor do meio.
+                z = returnId(x,y);
+                document.getElementById(z).style.backgroundColor = Turn.cor;
+                PosColor[x][y] = Turn.cor;
+                Turn.Npecas++;
+                x--;
+                y--;
+            }   
+            status = 1;
+            break;
+        }
+        x++;
+        y++;
+    }
+    
+    x = i, y = j;
+    
+    //Diagonal down left 
+    while((x <= 7) && (y>=0)){ //Testar cor das peças
+        if(PosColor[x][y] == Turn.cor && (x-i) > 1 && (j-y) > 1){
+             while((x >= i) && (y <=j)){ //corrigir cor do meio.
+                z = returnId(x,y);
+                document.getElementById(z).style.backgroundColor = Turn.cor;
+                PosColor[x][y] = Turn.cor;
+                Turn.Npecas++;
+                x--;
+                y++;
+            }
+            status = 1;
+            break;
+        }
+        x++;
+        y--;
+    }
+    
+    
+    if(status == 1){
+        updateColor(i,j);
+    }
+    
+    return status;
+}
+
+function returnId(i, j){
+    
+    let count = 0;
+    while(i > 0){
+        count += 8;
+        i--;
+    }
+    
+    count += j;
+    return count;
+}
+
+function updateColor(i, j){
+    if(((i-1) >= 0 && PosColor[i-1][j] == "null")){
+        PosColor[i-1][j] = "possivel";
+    }
+    
+    if((j-1) >= 0 && PosColor[i][j-1] == "null"){
+        PosColor[i][j-1] = "possivel";
+    }
+    
+    if((j+1) <= 7 && PosColor[i][j+1] == "null"){
+        PosColor[i][j+1] = "possivel";
+    }
+    
+   if(((i+1) <= 7 && PosColor[i+1][j] == "null")){
+        PosColor[i+1][j] = "possivel";
+    }
+}
+
+function swapTurn(){
+    if(Turn == Player1){
+        Turn = Player2;
+    }else{
+        Turn = Player1;
+    }
 }
