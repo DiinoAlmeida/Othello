@@ -1,21 +1,35 @@
-// Modal for rules button
+// Get the modal
 var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
 var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
 btn.onclick = function () {
     modal.style.display = "block";
 }
+
+// When the user clicks on <span> (x), close the modal
 span.onclick = function () {
     modal.style.display = "none";
 }
+
+// When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
 }
 
-//----------------------------------------------------------------
 
+
+
+
+
+//----------------------------------------------------------------
 
 class Player {
 
@@ -47,17 +61,18 @@ function submit() {
     radioCor = document.getElementsByName("Cor");
     radioAdeversario = document.getElementsByName("Adversario");
     radioDificuldade = document.getElementsByName("Dificuldade");
-    document.getElementById("PlayerTurn").innerHTML = "Black turn";
+
     if (radioCor[0].checked) {
         Player1.cor = "black";
         Player2.cor = "white";
+        document.getElementById("PlayerTurn").innerHTML = "Black turn";
         Turn = Player1;
     } else {
         Player1.cor = "white";
         Player2.cor = "black";
         Turn = Player2;
         bestMove();
-        swapTurn();
+        document.getElementById("PlayerTurn").innerHTML = "White turn";
     }
 }
 
@@ -67,6 +82,7 @@ PosColor[3][4] = PosColor[4][3] = "black";
 
 function gameon() {
     "use strict"; //????
+
     document.getElementById("Access").style.display = "none";
     document.getElementById("Status").style.display = 'block';
     document.getElementById("Config").style.display = 'block';
@@ -74,6 +90,7 @@ function gameon() {
     document.getElementById("DiscosB").style.display = 'block';
     document.getElementById("DiscosP").style.display = 'block';
     document.getElementById("PlayerTurn").style.display = 'block';
+
 
     const board = document.createElement("div");
     board.className = "board";
@@ -85,7 +102,6 @@ function gameon() {
         square.onclick = ((P) => {
             return () => turnClick(P)
         })(i);
-
         board.appendChild(square);
     }
 
@@ -97,6 +113,11 @@ function gameon() {
     document.getElementById("35").style.backgroundColor = "black";
     document.getElementById("27").style.backgroundColor = "white";
     document.getElementById("36").style.backgroundColor = "white";
+
+    document.getElementById("DiscosB").innerHTML = "Discos brancos: " + Player1.Npecas;
+    document.getElementById("DiscosP").innerHTML = "Discos pretos: " + Player2.Npecas;
+
+
 }
 
 
@@ -104,33 +125,42 @@ function bestMove() {
 
     for (let i = 0; i <= 7; i++) {
         for (let j = 0; j <= 7; j++) {
-            if (PosColor[i][j] != Turn.cor && (analiseNeighbors(i, j) == 1)) {
+            if (PosColor[i][j] != Turn.cor && (analiseNeighbors(i, j, 1) == 1)) {
+                document.getElementById(returnId(i, j)).disabled = "true";
+                swapTurn(); // Jogador
+
+                if (EndGame() == true) { //Verficar se jogador pode jogar
+                    swapTurn();
+                    if (EndGame() == true) { // Verificar se IA pode jogar 
+                        window.alert("O JOGO ACABOU!!");
+                    } else {
+                        bestMove();
+                    }
+                }
                 return;
             }
         }
     }
 }
 
-
-//ALterar esta função, pois se o primeiro jogador a jogar for o player2 o bestMove() é logo executado.
 function turnClick(indice) {
-    /*
-    playMove(square.target.id)
-    swapTurn();
-    setTimeout(bestMove, 2000);
-    */
-
 
     if (playMove(indice) == 1) {
-        swapTurn();
-        setTimeout(bestMove, 2000);
-        setTimeout(swapTurn, 3000);
-
+        document.getElementById(indice).disabled = "true";
+        swapTurn(); //IA
+        if (EndGame() == false) { // Se a IA puder jogar joga, caso contrario passa a jogada
+            setTimeout(bestMove, 2000);
+        } else {
+            swapTurn(); //Jog
+            if(EndGame() == true){
+                window.alert("O JOGO ACABOU!!");
+            }else{
+                 console.log("A ai passou a jogada");
+            }
+           
+        }
     }
-
-
 }
-
 
 //Esta função vai decidir se onde clicamos é possivel jogar ou nao consoante as regras
 //Se mudar alguma peça do adversário retorna 1 caso contrário retorna -1
@@ -151,19 +181,25 @@ function playMove(indice) {
     */
 
 
-    status = analiseNeighbors(count, indice);
+    status = analiseNeighbors(count, indice, 1);
 
-    console.log(status);
+    //console.log(status);
 
     return status;
 }
 
 
 //Se mudar alguma peça do adversário retorna 1 caso contrário retorna -1
-function analiseNeighbors(i, j) {
+//Option serve para indicar se é só para observar se há jogada ou se também é para jogar!
+// Option == 1 -> Jogar.
+// Option == 2 -> Observar.
+function analiseNeighbors(i, j, option) {
 
     let status = -1;
 
+    if (PosColor[i][j] != "null") {
+        return status;
+    }
 
     for (let dr = -1; dr <= 1; dr++) {
         for (let dc = -1; dc <= 1; dc++) {
@@ -183,22 +219,18 @@ function analiseNeighbors(i, j) {
                     count++;
                 }
 
-                console.log(r);
                 if (r >= 0 && c >= 0 && r <= 7 && c <= 7 && PosColor[r][c] == Turn.cor && count >= 1) {
-                    while (count != -1) {
-                        r = r - dr;
-                        c = c - dc;
-                        z = returnId(r, c);
-                        document.getElementById(z).style.backgroundColor = Turn.cor;
-                        PosColor[r][c] = Turn.cor;
-                        Turn.Npecas++;
-                        if(Turn.cor == "white") {
-                          document.getElementById("DiscosB").innerHTML = "Discos brancos: " + Turn.Npecas;
-                        } else {
-                          document.getElementById("DiscosP").innerHTML = "Discos pretos: " + Turn.Npecas;
-                        }
 
-                        count--;
+                    if (option == 1) {
+                        while (count != -1) {
+                            r = r - dr;
+                            c = c - dc;
+                            z = returnId(r, c);
+                            document.getElementById(z).style.backgroundColor = Turn.cor;
+                            PosColor[r][c] = Turn.cor;
+                            Turn.Npecas++;
+                            count--;
+                        }
                     }
                     status = 1;
                 }
@@ -230,33 +262,37 @@ function returnId(i, j) {
     return count;
 }
 
-function updateColor(i, j) {
-    if (((i - 1) >= 0 && PosColor[i - 1][j] == "null")) {
-        PosColor[i - 1][j] = "possivel";
-    }
-
-    if ((j - 1) >= 0 && PosColor[i][j - 1] == "null") {
-        PosColor[i][j - 1] = "possivel";
-    }
-
-    if ((j + 1) <= 7 && PosColor[i][j + 1] == "null") {
-        PosColor[i][j + 1] = "possivel";
-    }
-
-    if (((i + 1) <= 7 && PosColor[i + 1][j] == "null")) {
-        PosColor[i + 1][j] = "possivel";
-    }
-}
-
 function swapTurn() {
-  if(Turn.cor == "black") {
-  document.getElementById("PlayerTurn").innerHTML = "White turn";
-} else {
-  document.getElementById("PlayerTurn").innerHTML = "Black turn";
-}
+
+    //Compor este ciclo!!
     if (Turn == Player1) {
+        document.getElementById("PlayerTurn").innerHTML = "White turn";
         Turn = Player2;
     } else {
+        document.getElementById("PlayerTurn").innerHTML = "Black turn";
         Turn = Player1;
+    }
+}
+
+function EndGame() {
+
+    for (let i = 0; i <= 7; i++) {
+        for (let j = 0; j <= 7; j++) {
+            if (PosColor[i][j] == "null" && (analiseNeighbors(i, j, 0) == 1)) {
+                return false;
+            }
+        }
+    }
+
+
+    return true;
+}
+
+function skipTurn() {
+    if (EndGame() == false) {
+        console.log("Ainda podes jogar!");
+    } else {
+        swapTurn();
+        bestMove();
     }
 }

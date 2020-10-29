@@ -1,4 +1,5 @@
 body {
+        font-family: Arial;
     font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
@@ -64,7 +65,7 @@ h1{
 }
 
 #Config {
-    display: none;
+        display: none;
     position: absolute;
     text-align:center;
     top: 350px;
@@ -87,7 +88,7 @@ h1{
 }
 
 #Status {
-    font-size: 23px;
+       font-size: 23px;
     display: none;
     position: absolute;
     top: 130px;
@@ -98,6 +99,7 @@ h1{
     background-color: skyblue;
     border-radius: 3px;
 }
+
 
 #DiscosB {
     display: none;
@@ -143,3 +145,5 @@ h1{
     border: 1px solid black;
     cursor: pointer;
 }
+
+
