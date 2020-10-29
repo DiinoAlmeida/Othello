@@ -1,5 +1,5 @@
 body {
-    font-family: Arial;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
 .modal {
@@ -14,11 +14,19 @@ body {
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+h1{
+  background-color: skyblue;
+  border: 1px solid black;
+  text-align:center;
+  padding:2px;
+  border-radius:3px;
+}
+
 #myBtn{
   display: none;
   position: absolute;
-  margin-top:400px;
-  margin-left:50px;
+  margin-top:300px;
+  margin-left:150px;
   font-size:15px;
 }
 
@@ -49,18 +57,19 @@ body {
 
 #GameName {
     font-family: "Keraleeyam";
-    font-size: 50px;
+    font-size: 70px;
     position: absolute;
-    top: 25px;
+    top: 45px;
     left: 50px;
 }
 
 #Config {
     display: none;
     position: absolute;
-    top: 450px;
-    left: 50px;
-    font-size: 15px
+    text-align:center;
+    top: 350px;
+    left: 150px;
+    font-size: 15px;
 }
 
 #Rules{
@@ -73,8 +82,8 @@ body {
 
 #Access {
     position: absolute;
-    top: 70px;
-    left: 1300px;
+    top: 170px;
+    left: 50px;
 }
 
 #Status {
@@ -106,12 +115,21 @@ body {
     text-align: left;
 }
 
+#PlayerTurn {
+    font-size: 23px;
+    display: none;
+    position: absolute;
+    top: 820px;
+    left: 830px;
+    text-align: center;
+}
+
 .board {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
     position: absolute;
-    top: 300px;
+    top: 270px;
     left: 650px;
     width: 496px;
     height: 496px;

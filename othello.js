@@ -47,7 +47,7 @@ function submit() {
     radioCor = document.getElementsByName("Cor");
     radioAdeversario = document.getElementsByName("Adversario");
     radioDificuldade = document.getElementsByName("Dificuldade");
-
+    document.getElementById("PlayerTurn").innerHTML = "Black turn";
     if (radioCor[0].checked) {
         Player1.cor = "black";
         Player2.cor = "white";
@@ -67,13 +67,13 @@ PosColor[3][4] = PosColor[4][3] = "black";
 
 function gameon() {
     "use strict"; //????
+    document.getElementById("Access").style.display = "none";
     document.getElementById("Status").style.display = 'block';
     document.getElementById("Config").style.display = 'block';
     document.getElementById("myBtn").style.display = 'block';
     document.getElementById("DiscosB").style.display = 'block';
     document.getElementById("DiscosP").style.display = 'block';
-    //document.getElementById("DiscosB").innerHTML += 2;
-    //document.getElementById("DiscosP").innerHTML += 2;
+    document.getElementById("PlayerTurn").style.display = 'block';
 
     const board = document.createElement("div");
     board.className = "board";
@@ -193,9 +193,9 @@ function analiseNeighbors(i, j) {
                         PosColor[r][c] = Turn.cor;
                         Turn.Npecas++;
                         if(Turn.cor == "white") {
-                          document.getElementById("DiscosB").innerHTML = "Discos brancos:" + Turn.Npecas;
+                          document.getElementById("DiscosB").innerHTML = "Discos brancos: " + Turn.Npecas;
                         } else {
-                          document.getElementById("DiscosP").innerHTML = "Discos pretos:" + Turn.Npecas;
+                          document.getElementById("DiscosP").innerHTML = "Discos pretos: " + Turn.Npecas;
                         }
 
                         count--;
@@ -249,6 +249,11 @@ function updateColor(i, j) {
 }
 
 function swapTurn() {
+  if(Turn.cor == "black") {
+  document.getElementById("PlayerTurn").innerHTML = "White turn";
+} else {
+  document.getElementById("PlayerTurn").innerHTML = "Black turn";
+}
     if (Turn == Player1) {
         Turn = Player2;
     } else {
