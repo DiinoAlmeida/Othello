@@ -26,9 +26,6 @@ window.onclick = function (event) {
 
 
 
-
-
-
 //----------------------------------------------------------------
 
 class Player {
@@ -36,18 +33,19 @@ class Player {
     constructor(id, Npecas) {
         this.id = id;
         this.Npecas = Npecas;
+        this.vitorias = 0;
         this.cor = null;
     }
 
 }
 
 //Create a 2d array and set every position equal to null
-var PosColor = new Array(8);
+var PosCor = new Array(8);
 
 for (let i = 0; i < 8; i++) {
-    PosColor[i] = new Array(8);
+    PosCor[i] = new Array(8);
     for (let j = 0; j < 8; j++) {
-        PosColor[i][j] = "null";
+        PosCor[i][j] = "null";
     }
 }
 
@@ -77,8 +75,8 @@ function submit() {
 }
 
 //Cores iniciais
-PosColor[3][3] = PosColor[4][4] = "white";
-PosColor[3][4] = PosColor[4][3] = "black";
+PosCor[3][3] = PosCor[4][4] = "white";
+PosCor[3][4] = PosCor[4][3] = "black";
 
 function gameon() {
     "use strict"; //????
@@ -114,8 +112,8 @@ function gameon() {
     document.getElementById("27").style.backgroundColor = "white";
     document.getElementById("36").style.backgroundColor = "white";
 
-    document.getElementById("DiscosB").innerHTML = "Discos brancos: " + Player1.Npecas;
-    document.getElementById("DiscosP").innerHTML = "Discos pretos: " + Player2.Npecas;
+    document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
+    document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
 
 
 }
@@ -125,7 +123,7 @@ function bestMove() {
 
     for (let i = 0; i <= 7; i++) {
         for (let j = 0; j <= 7; j++) {
-            if (PosColor[i][j] != Turn.cor && (analiseNeighbors(i, j, 1) == 1)) {
+            if (PosCor[i][j] != Turn.cor && (analiseNeighbors(i, j, 1) == 1)) {
                 document.getElementById(returnId(i, j)).disabled = "true";
                 swapTurn(); // Jogador
 
@@ -153,11 +151,17 @@ function turnClick(indice) {
         } else {
             swapTurn(); //Jog
             if(EndGame() == true){
-                window.alert("O JOGO ACABOU!!");
+                document.getElementById("Passar").style.display='none';
+                document.getElementById("PlayerTurn").style.display='none';
+                document.getElementById("Vencedor").style.display='block';
+                if(Player1.Npecas > Player2.Npecas){
+                    document.getElementById("Vencedor").innerHTML = "Parabéns ganhou!!";
+                }else{
+                     document.getElementById("Vencedor").innerHTML = "Fica para a próxima, jogar outra vez?";
+                }                
             }else{
                  console.log("A ai passou a jogada");
             }
-           
         }
     }
 }
@@ -175,15 +179,7 @@ function playMove(indice) {
         count++;
     }
 
-    /*
-     i/8
-     i%8
-    */
-
-
     status = analiseNeighbors(count, indice, 1);
-
-    //console.log(status);
 
     return status;
 }
@@ -197,9 +193,7 @@ function analiseNeighbors(i, j, option) {
 
     let status = -1;
 
-    if (PosColor[i][j] != "null") {
-        return status;
-    }
+    if (PosCor[i][j] != "null") return status;
 
     for (let dr = -1; dr <= 1; dr++) {
         for (let dc = -1; dc <= 1; dc++) {
@@ -207,19 +201,19 @@ function analiseNeighbors(i, j, option) {
             let r = i + dr;
             let c = j + dc;
 
-            if ((dc == 0 && dr == 0) || r < 0 || c < 0 || r > 7 || c > 7 || (PosColor[r][c] == "null") || PosColor[r][c] == Turn.cor) {
+            if ((dc == 0 && dr == 0) || r < 0 || c < 0 || r > 7 || c > 7 || (PosCor[r][c] == "null") || PosCor[r][c] == Turn.cor) {
                 continue;
             } else {
 
                 let count = 0;
 
-                while (r >= 0 && c >= 0 && r <= 7 && c <= 7 && PosColor[r][c] != Turn.cor && PosColor[r][c] != "null") {
+                while (r >= 0 && c >= 0 && r <= 7 && c <= 7 && PosCor[r][c] != Turn.cor && PosCor[r][c] != "null") {
                     r += dr;
                     c += dc;
                     count++;
                 }
 
-                if (r >= 0 && c >= 0 && r <= 7 && c <= 7 && PosColor[r][c] == Turn.cor && count >= 1) {
+                if (r >= 0 && c >= 0 && r <= 7 && c <= 7 && PosCor[r][c] == Turn.cor && count >= 1) {
 
                     if (option == 1) {
                         while (count != -1) {
@@ -227,11 +221,11 @@ function analiseNeighbors(i, j, option) {
                             c = c - dc;
                             z = returnId(r, c);
                             document.getElementById(z).style.backgroundColor = Turn.cor;
-                            PosColor[r][c] = Turn.cor;
-                            Turn.Npecas++;
+                            PosCor[r][c] = Turn.cor;
                             count--;
                         }
                     }
+                    contarPecas();
                     status = 1;
                 }
             }
@@ -242,16 +236,7 @@ function analiseNeighbors(i, j, option) {
 
 
 function returnId(i, j) {
-
-    //console.log("i: " + i + "j: " + j);
-
-
-    /*
-        i/8
-        i%8
-    */
-    //Contrario disto
-
+    
     let count = 0;
     while (i > 0) {
         count += 8;
@@ -264,7 +249,6 @@ function returnId(i, j) {
 
 function swapTurn() {
 
-    //Compor este ciclo!!
     if (Turn == Player1) {
         document.getElementById("PlayerTurn").innerHTML = "White turn";
         Turn = Player2;
@@ -272,27 +256,52 @@ function swapTurn() {
         document.getElementById("PlayerTurn").innerHTML = "Black turn";
         Turn = Player1;
     }
+ 
+    document.getElementById("Passar").style.display = 'none';
 }
 
 function EndGame() {
 
     for (let i = 0; i <= 7; i++) {
         for (let j = 0; j <= 7; j++) {
-            if (PosColor[i][j] == "null" && (analiseNeighbors(i, j, 0) == 1)) {
-                return false;
-            }
+            if (PosCor[i][j] == "null" && (analiseNeighbors(i, j, 0) == 1)) return false;
         }
     }
-
 
     return true;
 }
 
 function skipTurn() {
     if (EndGame() == false) {
-        console.log("Ainda podes jogar!");
+        document.getElementById("Passar").style.display = 'block';
     } else {
         swapTurn();
         bestMove();
     }
 }
+
+function contarPecas(){
+    
+    let count1 = 0;
+    let count2 = 0;
+    
+    for(let i = 0; i <= 7; i++){
+        for(let j = 0; j <= 7; j++){
+            if(PosCor[i][j] == Player1.cor){
+                count1++;
+            }else if(PosCor[i][j] == Player2.cor){
+                count2++;
+            }
+        }
+    }
+    
+    Player1.Npecas = count1;
+    Player2.Npecas = count2;
+    
+    document.getElementById("DiscosB").innerHTML = "Discos brancos: " + count2;
+    document.getElementById("DiscosP").innerHTML = "Discos pretos: " + count1;
+}
+
+
+
+

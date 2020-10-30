@@ -126,6 +126,24 @@ h1{
     text-align: center;
 }
 
+#Passar{
+    font-size: 23px;
+    display: none;
+    position: absolute;
+    top: 850px;
+    left: 830px;
+    text-align: center;
+}
+
+#Vencedor {
+    font-size: 23px;
+    display: none;
+    position: absolute;
+    top: 820px;
+    left: 8300px;
+    text-align: center;
+}
+
 .board {
     display: flex;
     flex-wrap: wrap;
