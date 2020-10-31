@@ -11,7 +11,6 @@
 
     <div id="GameName"> Othello </div>
 
-    <!-- Download das fotos em 24px-->
     <div id="Access">
         <p><img src="user.png"> <input type=email></p>
         <p><img src="key.png"> <input type=password></p>
@@ -26,23 +25,15 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <ul><h2>Objetivo do jogo</h2>
-          <li>O objetivo do jogo é ter a maioria dos discos da sua cor com a face virada para cima no tabuleiro ao fim da partida.</li>
+          <p>O objetivo do jogo é acabar com maior número de discos do que o adversário.</p>
         </ul>
         <ul><h2>Regras do jogo</h2>
-          <li>O jogador dos discos pretos joga sempre primeiro.</li>
-          <li>Se um jogador não puder flanquear e virar ao menos um disco do oponente,
-            ele perde a vez e seu oponente joga outra vez. Entretanto, se o lance é possível o jogador não pode passar sua vez.</li>
-          <li>Um disco pode flanquear vários discos em uma ou mais linhas em várias direções ao mesmo tempo – horizontal,
-            vertical ou diagonal. Uma “linha” é definida como um ou mais discos em uma linha reta contínua.</li>
-          <li>Um jogador não pode passar por cima do disco de sua cor(s) para flanquear um disco oposto a ele.</li>
-          <li>O(s) disco(s) deve(m) ser flanqueados(s) como resultado direto de uma jogada sendo virado(s) na linha do disco posicionado.</li>
-          <li>Todos os discos flanqueados em qualquer movimento devem ser virados, mesmo que fosse uma vantagem para o jogador não virá-los.</li>
-          <li>Uma vez que um disco é colocado em um quadrado, ele nunca poderá ser movido para outro quadrado mais tarde no jogo.</li>
-          <li>Quando não há mais possibilidade de movimento para ambos os jogadores,
-            o jogo termina. Os discos são contados e o jogador com a maioria dos discos da sua cor é o vencedor da partida.</li>
-        </ul>
-        <ul><h2>Nota:</h2>
-        <li>É possível que um jogo termine antes que de todas as 64 casa sejam preenchidas.</li>
+          <li>Começa sempre o jogador cuja a cor dos discos seja preta e vai jogando alternadamente.</li>
+          <li>Uma jogada é válida quando muda a cor de pelo menos um disco do adversário.</li>
+          <li>Se não houver jogadas possíveis o jogador tem de passar a jogada ao adversário.</li>
+          <li>Em cada jogada podem ser retirados um ou mais discos ao adversário desde que seja na horizontal, vertical ou na diagonal.</li>
+          <li>Para uma jogada ser válida, é preciso que em qualquer direção haja pelo menos um disco do adversário entre o disco colocado e outro da nossa cor.</li>
+          <li>Quando nenhum dos jogadores pode jogar ou todas as posições forem preenchidas, o jogo termina e quem tiver o maior número de discos ganha.</li>
         </ul>
       </div>
     </div>
@@ -64,9 +55,8 @@
             Difícil <input type="radio" name="Dificuldade" value="Dificil"> 
         </p>
         <button onclick = submit()>Vamos Jogar</button>
-        <button onclick= submit() disabled>Voltar a Jogar</button>
+        <button id ="Again" onclick= PlayAgain() disabled>Voltar a Jogar</button>
         <button onclick= skipTurn() id ="btskip"> Passar </button> 
-    
     </div>
 
     <div id="Status"> Game Status </div>
@@ -78,8 +68,7 @@
     
       
 </body>
-
-
-<script type="text/javascript" src="othello.js"></script>
+    
+<script src="othello.js"></script>
 
 </html>
