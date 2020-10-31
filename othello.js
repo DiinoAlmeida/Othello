@@ -82,6 +82,9 @@ function gameon() {
     document.getElementById("DiscosB").style.display = 'block';
     document.getElementById("DiscosP").style.display = 'block';
     document.getElementById("PlayerTurn").style.display = 'block';
+    document.getElementById("Classificacoes").style.display = 'block';
+    document.getElementById("JogadorWin").style.display = 'block';
+    document.getElementById("ComputerWin").style.display = 'block';
 
     ArrayInit();
 
@@ -146,7 +149,7 @@ function bestMove() {
 
                 if (CheckEndGame() == true) { //Verficar se jogador pode jogar
                     swapTurn();
-                    if (CheckEndGame() == true) { // Verificar se IA pode jogar 
+                    if (CheckEndGame() == true) { // Verificar se IA pode jogar
                         EndGame();
                     } else {
                         bestMove();
@@ -187,7 +190,9 @@ function EndGame() {
         Player2.vitorias++;
         document.getElementById("Vencedor").innerHTML = "Fica para a próxima, jogar outra vez?";
     }
-    
+    document.getElementById("JogadorWin").innerHTML = "Jogador: " + Player1.vitorias;
+    document.getElementById("ComputerWin").innerHTML = "Computador: " +Player2.vitorias;
+
 }
 
 //Esta função vai decidir se onde clicamos é possivel jogar ou nao consoante as regras

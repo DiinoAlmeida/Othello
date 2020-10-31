@@ -37,26 +37,20 @@
         </ul>
       </div>
     </div>
-    
+
     <div id="Config">
         <h1>Cor do jogador:</h1>
-        <p> Preto <input type="radio" name = "Cor" value= "Preto"> 
-            Branco <input type="radio" name = "Cor" value="Branco"> 
+        <p> Preto <input type="radio" name = "Cor" value= "Preto">
+            Branco <input type="radio" name = "Cor" value="Branco">
         </p>
 
         <h1>Adversário: </h1>
-        <p>Jogador <input type="radio" name="Adversario" value = "Jogador"> 
-            Computador <input type="radio" name="Adversario" value="Computador"> 
-        </p>
-
-        <h1>Dificuldade:</h1>
-        <p>Fácil <input type="radio" name="Dificuldade" value="Facil"> 
-            Médio <input type="radio" name="Dificuldade" value="Medio"> 
-            Difícil <input type="radio" name="Dificuldade" value="Dificil"> 
+        <p>Jogador <input type="radio" name="Adversario" value = "Jogador">
+            Computador <input type="radio" name="Adversario" value="Computador">
         </p>
         <button onclick = submit()>Vamos Jogar</button>
         <button id ="Again" onclick= PlayAgain() disabled>Voltar a Jogar</button>
-        <button onclick= skipTurn() id ="btskip"> Passar </button> 
+        <button onclick= skipTurn() id ="btskip"> Passar </button>
     </div>
 
     <div id="Status"> Game Status </div>
@@ -65,10 +59,13 @@
     <div id="PlayerTurn"></div>
     <div id="Passar">Ainda podes jogar!</div>
     <div id="Vencedor"></div>
-    
-      
+      <div id="Classificacoes"><h3>Classificações:</h3>
+      <p id="JogadorWin">Jogador: </p>
+      <p id="ComputerWin">Computador: </p></div>
+
+
 </body>
-    
+
 <script src="othello.js"></script>
 
 </html>
