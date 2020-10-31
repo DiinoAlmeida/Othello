@@ -34,7 +34,7 @@ h1 {
     display: none;
     position: absolute;
     margin-top: 300px;
-    margin-left: 235px;
+    margin-left: 280px;
     font-size: 15px;
 }
 
@@ -138,7 +138,7 @@ h1 {
     text-decoration-color: skyblue;
 }
 
-#Passar {
+#Skip {
     font-size: 23px;
     width:496px;
     display: none;
@@ -150,7 +150,7 @@ h1 {
     text-decoration-color: skyblue;
 }
 
-#Vencedor {
+#Winner {
     font-size: 23px;
     display: none;
     position: absolute;
@@ -163,7 +163,7 @@ h1 {
 }
 
 
-#Classificacoes {
+#Statistics {
   display: none;
   position: absolute;
   top: 300px;

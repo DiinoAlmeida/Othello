@@ -19,14 +19,8 @@ window.onclick = function (event) {
     }
 }
 
-
-/*
-    Ver porque quando a ia não pode jogar nem o jogador pode (por esta ordem) a IA joga
-*/
-
 //----------------------------------------------------------------
 class Player {
-
     constructor(id, Npecas) {
         this.id = id;
         this.Npecas = Npecas;
@@ -34,7 +28,6 @@ class Player {
         this.cor = null;
         this.className = null;
     }
-
 }
 
 //Inicializar variaveis globais
@@ -44,8 +37,7 @@ var Player2 = new Player(2, 2);
 var Turn;
 
 /*
-    Depois de pressionar botão login colocamos todos os elementos necessários
-    na página e criamos o tabuleiro.
+    Depois de pressionar botão login colocamos todos os elementos necessários na página e criamos o tabuleiro.
 */
 function gameon() {
     "use strict";
@@ -56,7 +48,7 @@ function gameon() {
     document.getElementById("DiscosB").style.display = 'block';
     document.getElementById("DiscosP").style.display = 'block';
     document.getElementById("PlayerTurn").style.display = 'block';
-    document.getElementById("Classificacoes").style.display = 'block';
+    document.getElementById("Statistics").style.display = 'block';
     document.getElementById("JogadorWin").style.display = 'block';
     document.getElementById("ComputerWin").style.display = 'block';
 
@@ -77,8 +69,6 @@ function gameon() {
 
     document.body.appendChild(board);
 
-    //Cells = document.querySelectorAll(".square");
-
     document.getElementById("28").className = "squareB";
     document.getElementById("35").className = "squareB";
     document.getElementById("27").className = "squareW";
@@ -90,9 +80,8 @@ function gameon() {
 
 //Processar as opções de jogo escolhidas
 function submit() {
-    radioCor = document.getElementsByName("Cor");
-    radioAdeversario = document.getElementsByName("Adversario");
-    radioDificuldade = document.getElementsByName("Dificuldade");
+    radioCor = document.getElementsByName("Color");
+    radioAdeversario = document.getElementsByName("Adversary");
 
     if (radioCor[0].checked) {
         Player1.cor = "black";
@@ -117,10 +106,10 @@ function submit() {
 function PlayAgain() {
 
     document.getElementById("Again").disabled = true;
-    document.getElementById("Passar").style.display = 'none';
+    document.getElementById("Skip").style.display = 'none';
     document.getElementById("PlayerTurn").style.display = 'block';
-    document.getElementById("Vencedor").style.display = 'none';
-    document.getElementById("Vencedor").innerHTML = "";
+    document.getElementById("Winner").style.display = 'none';
+    document.getElementById("Winner").innerHTML = "";
 
     ArrayInit();
 
@@ -268,7 +257,7 @@ function swapTurn() {
         Turn = Player1;
     }
 
-    document.getElementById("Passar").style.display = 'none';
+    document.getElementById("Skip").style.display = 'none';
 }
 
 
@@ -286,17 +275,17 @@ function CheckEndGame() {
 //Termina o jogo
 function EndGame() {
 
-    document.getElementById("Passar").style.display = 'none';
+    document.getElementById("Skip").style.display = 'none';
     document.getElementById("PlayerTurn").style.display = 'none';
-    document.getElementById("Vencedor").style.display = 'block';
+    document.getElementById("Winner").style.display = 'block';
     document.getElementById("Again").disabled = false;
 
     if (Player1.Npecas > Player2.Npecas) {
-        document.getElementById("Vencedor").innerHTML = "Parabéns ganhou!!";
+        document.getElementById("Winner").innerHTML = "Parabéns ganhou!!";
         Player1.vitorias++;
     } else {
         Player2.vitorias++;
-        document.getElementById("Vencedor").innerHTML = "Fica para a próxima, jogar outra vez?";
+        document.getElementById("Winner").innerHTML = "Fica para a próxima, jogar outra vez?";
     }
 
     document.getElementById("JogadorWin").innerHTML = "Jogador: " + Player1.vitorias;
@@ -307,7 +296,7 @@ function EndGame() {
 //Passar a jogada
 function skipTurn() {
     if (CheckEndGame() == false) {
-        document.getElementById("Passar").style.display = 'block';
+        document.getElementById("Skip").style.display = 'block';
     } else {
         swapTurn();
         bestMove();
