@@ -75,6 +75,7 @@ h1 {
 #Rules {
     display: none;
     position: absolute;
+    line-height: 2.0;
     top: 400px;
     left: 50px;
     font-size: 15px;
@@ -143,6 +144,7 @@ h1 {
     width: 496px;
     text-align: center;
 }
+
 
 #Classificacoes {
   display: none;
