@@ -14,6 +14,14 @@ body {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+p{
+  line-height: 1.5;;
+}
+
+li{
+  line-height:1.9;
+}
+
 h1 {
     background-color: skyblue;
     border: 1px solid black;
@@ -26,13 +34,14 @@ h1 {
     display: none;
     position: absolute;
     margin-top: 300px;
-    margin-left: 150px;
+    margin-left: 235px;
     font-size: 15px;
 }
 
 .modal-content {
     height: auto;
     overflow: auto;
+    line-height: 1.2;
     background-color: #fefefe;
     margin: 15% auto;
     padding: 30px;
@@ -118,21 +127,27 @@ h1 {
 }
 
 #PlayerTurn {
-    font-size: 23px;
+    font-size: 30px;
     display: none;
     position: absolute;
-    top: 820px;
-    left: 830px;
+    width:200px;
+    top: 520px;
+    left: 1330px;
     text-align: center;
+    text-decoration: underline;
+    text-decoration-color: skyblue;
 }
 
 #Passar {
     font-size: 23px;
+    width:496px;
     display: none;
     position: absolute;
     top: 850px;
-    left: 830px;
+    left: 650px;
     text-align: center;
+    text-decoration: underline;
+    text-decoration-color: skyblue;
 }
 
 #Vencedor {
@@ -143,6 +158,8 @@ h1 {
     left: 650px;
     width: 496px;
     text-align: center;
+    text-decoration: underline;
+    text-decoration-color: skyblue;
 }
 
 

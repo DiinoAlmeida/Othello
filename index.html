@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 
 <head>
     <meta charset=UTF-8> <!-- paa caracteres acentuados -->
@@ -12,8 +12,8 @@
     <div id="GameName"> Othello </div>
 
     <div id="Access">
-        <p><img src="user.png"> <input type=email></p>
-        <p><img src="key.png"> <input type=password></p>
+        <p><img src="user.png" alt="user"> <input type=email></p>
+        <p><img src="key.png" alt="pass"> <input type=password></p>
         <button onclick="gameon()">Login</button>
     </div>
 
@@ -23,10 +23,12 @@
     <div id="myModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <ul><h2>Objetivo do jogo</h2>
-          <p>O objetivo do jogo é acabar com maior número de discos do que o adversário.</p>
-        </ul>
-        <ul><h2>Regras do jogo</h2>
+        <h2>Objetivo do jogo</h2>
+        <p>
+          O objetivo do jogo é acabar com maior número de discos do que o adversário.
+        </p>
+        <h2>Regras do jogo</h2>
+        <ul>
           <li>Começa sempre o jogador cuja a cor dos discos seja preta e vai jogando alternadamente.</li>
           <li>Uma jogada é válida quando muda a cor de pelo menos um disco do adversário.</li>
           <li>Se não houver jogadas possíveis o jogador tem de passar a jogada ao adversário.</li>
@@ -36,21 +38,21 @@
         </ul>
       </div>
     </div>
-    
+
     <div id="Config">
         <h1>Cor do jogador:</h1>
-        <p> Preto <input type="radio" name = "Cor" value= "Preto"> 
-            Branco <input type="radio" name = "Cor" value="Branco"> 
+        <p> Preto <input type="radio" name = "Cor" value= "Preto">
+            Branco <input type="radio" name = "Cor" value="Branco">
         </p>
 
         <h1>Adversário: </h1>
-        <p>Jogador <input type="radio" name="Adversario" value = "Jogador"> 
-            Computador <input type="radio" name="Adversario" value="Computador"> 
+        <p>Jogador <input type="radio" name="Adversario" value = "Jogador">
+            Computador <input type="radio" name="Adversario" value="Computador">
         </p>
 
         <button id = "Play" onclick = submit()>Vamos Jogar</button>
         <button id ="Again" onclick= PlayAgain() disabled>Voltar a Jogar</button>
-        <button onclick= skipTurn() id ="btskip"> Passar </button> 
+        <button onclick= skipTurn() id ="btskip"> Passar </button>
     </div>
 
     <div id="Status"> Game Status </div>
@@ -59,14 +61,12 @@
     <div id="PlayerTurn"></div>
     <div id="Passar">Ainda podes jogar!</div>
     <div id="Vencedor"></div>
-    
+
     <div id="Classificacoes"><h3>Classificações:</h3>
       <p id="JogadorWin">Jogador: </p>
       <p id="ComputerWin">Computador: </p></div>
-    
-      
-</body>
-    
 <script src="othello.js"></script>
+
+</body>
 
 </html>

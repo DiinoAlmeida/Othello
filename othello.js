@@ -1,23 +1,18 @@
-// Get the modal
+// Modal for rules button
 var modal = document.getElementById("myModal");
 
-// Get the button that opens the modal
 var btn = document.getElementById("myBtn");
 
-// Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on the button, open the modal
 btn.onclick = function () {
     modal.style.display = "block";
 }
 
-// When the user clicks on <span> (x), close the modal
 span.onclick = function () {
     modal.style.display = "none";
 }
 
-// When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
@@ -155,7 +150,7 @@ function bestMove() {
 
                 if (CheckEndGame() == true) { //Verficar se jogador pode jogar
                     swapTurn();
-                    if (CheckEndGame() == true) { // Verificar se IA pode jogar 
+                    if (CheckEndGame() == true) { // Verificar se IA pode jogar
                         EndGame();
                     } else {
                         bestMove();
@@ -295,7 +290,7 @@ function EndGame() {
     document.getElementById("PlayerTurn").style.display = 'none';
     document.getElementById("Vencedor").style.display = 'block';
     document.getElementById("Again").disabled = false;
-    
+
     if (Player1.Npecas > Player2.Npecas) {
         document.getElementById("Vencedor").innerHTML = "Parabéns ganhou!!";
         Player1.vitorias++;
