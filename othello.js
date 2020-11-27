@@ -35,11 +35,11 @@ var PosCor = new Array(8);
 var Player1 = new Player(1, 2);
 var Player2 = new Player(2, 2);
 var Turn;
-
+var Adversary;
 /*
-    Depois de pressionar botão login colocamos todos os elementos necessários na página e criamos o tabuleiro.
+    Depois de pressionar botão login colocamos todos os elementos necessários na página.
 */
-function gameon() {
+function GameOn() {
     "use strict";
     document.getElementById("Access").style.display = "none";
     document.getElementById("Status").style.display = 'block';
@@ -51,8 +51,50 @@ function gameon() {
     document.getElementById("Statistics").style.display = 'block';
     document.getElementById("JogadorWin").style.display = 'block';
     document.getElementById("ComputerWin").style.display = 'block';
+}
 
-    ArrayInit();
+//Processar as opções de jogo escolhidas
+function Submit() {
+    radioCor = document.getElementsByName("Color");
+    radioAdeversario = document.getElementsByName("Adversary");
+
+    if (radioAdeversario[1].checked) {
+        TabOn();
+        Adversary = "Computer";
+        ArrayInit();
+    } else if (radioAdeversario[0].checked) {
+        Join();
+        TabOn(); //Colocar tabuleiro
+        Adversary = "Player";
+        return;
+    } else {
+        window.alert("Tem de escolher uma opção!");
+    }
+
+    if (radioCor[0].checked) {
+        Player1.cor = "black";
+        Player1.className = "squareB";
+        Player2.cor = "white";
+        Player2.className = "squareW";
+        Turn = Player1;
+    } else if (radioCor[1].checked) {
+        Player1.cor = "white";
+        Player1.className = "squareW";
+        Player2.cor = "black";
+        Player2.className = "squareB";
+        Turn = Player2;
+        bestMove();
+    } else {
+        window.alert("Tem de escolher uma opção!");
+    }
+
+    document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
+    document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
+    //document.getElementById("PlayerTurn").innerHTML = nick;
+}
+
+//Coloca o tabuleiro do jogo no ecra
+function TabOn() {
 
     const board = document.createElement("div");
     board.className = "board";
@@ -74,57 +116,20 @@ function gameon() {
     document.getElementById("27").className = "squareW";
     document.getElementById("36").className = "squareW";
 
-    document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
-    document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
-}
-
-//Processar as opções de jogo escolhidas
-function submit() {
-    radioCor = document.getElementsByName("Color");
-    radioAdeversario = document.getElementsByName("Adversary");
-
-    if (radioCor[0].checked) {
-        Player1.cor = "black";
-        Player1.className = "squareB";
-        Player2.cor = "white";
-        Player2.className = "squareW";
-        Turn = Player1;
-    } else {
-        Player1.cor = "white";
-        Player1.className = "squareW";
-        Player2.cor = "black";
-        Player2.className = "squareB";
-        Turn = Player2;
-        bestMove();
-    }
-
-    document.getElementById("PlayerTurn").innerHTML = "Jogador";
     document.getElementById("Play").disabled = true;
+    document.getElementById("Leave").disabled = false;
 }
 
-//Botão de voltar a jogar, fazemos "reset" a tudo
-function PlayAgain() {
 
-    document.getElementById("Again").disabled = true;
+function GameOver() {
+    document.getElementById("Play").disabled = false;
     document.getElementById("Skip").style.display = 'none';
-    document.getElementById("PlayerTurn").style.display = 'block';
+    document.getElementById("PlayerTurn").style.display = 'none';
     document.getElementById("Winner").style.display = 'none';
     document.getElementById("Winner").innerHTML = "";
+    document.getElementById("Leave").disabled = true;
 
-    ArrayInit();
-
-    Player1.Npecas = Player2.Npecas = 2;
-
-    for (let i = 0; i < 64; i++) {
-        document.getElementById(i).className = "square";
-    }
-
-    document.getElementById("28").className = "squareB";
-    document.getElementById("35").className = "squareB";
-    document.getElementById("27").className = "squareW";
-    document.getElementById("36").className = "squareW";
-
-    submit();
+    for (let i = 0; i < 64; i++) document.getElementById(i).remove();
 }
 
 //Vez do computador a jogar
@@ -151,10 +156,11 @@ function bestMove() {
     }
 }
 
+
 //Depois de clicarmos no tabuleiro
 function turnClick(indice) {
 
-    if (playMove(indice) == 1) {
+    if (Adversary == "Computer" && playMove(indice) == 1) {
         document.getElementById(indice).disabled = "true";
         swapTurn(); //IA
         if (CheckEndGame() == false) { // Se a IA puder jogar joga, caso contrario passa a jogada
@@ -163,6 +169,15 @@ function turnClick(indice) {
             swapTurn(); //Jog
             if (CheckEndGame() == true) EndGame();
         }
+    } else if (Adversary == "Player") {
+
+        let count = 0;
+        while (indice > 7) {
+            indice -= 8;
+            count++;
+        }
+
+        notifyServer(count, indice);
     }
 }
 
@@ -278,7 +293,6 @@ function EndGame() {
     document.getElementById("Skip").style.display = 'none';
     document.getElementById("PlayerTurn").style.display = 'none';
     document.getElementById("Winner").style.display = 'block';
-    document.getElementById("Again").disabled = false;
 
     if (Player1.Npecas > Player2.Npecas) {
         document.getElementById("Winner").innerHTML = "Parabéns ganhou!!";
@@ -342,4 +356,139 @@ function ArrayInit() {
 
     PosCor[3][3] = PosCor[4][4] = "white";
     PosCor[3][4] = PosCor[4][3] = "black";
+}
+
+
+
+
+//Server----------------------------------
+
+var url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
+
+var nick;
+var pass;
+var group = "10";
+var game;
+
+
+function login() {
+
+    nick = document.getElementById("user").value;
+    pass = document.getElementById("pass").value;
+
+    data = {
+        "nick": nick,
+        "pass": pass
+    }
+
+    fetch(url + "register", {
+            method: "POST",
+            body: JSON.stringify(data),
+        })
+        .then(function (r) {
+            return r.text();
+        })
+        .then(function (t) {
+            if (t != "{}") {
+                window.alert(t);
+            } else {
+                GameOn();
+            }
+        })
+        .catch(console.log);
+}
+
+
+function Join() {
+
+    data = {
+        "group": group,
+        "nick": nick,
+        "pass": pass
+    }
+
+    fetch(url + "join", {
+            method: "POST",
+            body: JSON.stringify(data),
+        })
+        .then(function (r) {
+            return r.json();
+        })
+        .then(function (t) {
+            game = t.game; //Tratar dos erros mas não percebi como se fazia
+        })
+        .catch(console.log);
+
+}
+
+
+function LeaveGame() {
+
+    if (Adversary == "Player") {
+        data = {
+            "game": game,
+            "nick": nick,
+            "pass": pass
+        }
+
+        fetch(url + "leave", {
+                method: "POST",
+                body: JSON.stringify(data),
+            })
+            .then(function (r) {
+                return r.json();
+            })
+            .then(function (t) {
+                //Tratar dos erros mas não percebi como se fazia
+            })
+            .catch(console.log);
+    }
+
+    document.getElementById("DiscosB").innerHTML = "";
+    document.getElementById("DiscosP").innerHTML = "";
+    GameOver();
+}
+
+
+function notifyServer(row, col) {
+
+    data = {
+        "nick": nick,
+        "pass": pass,
+        "game": game,
+        "move": {
+            "row": row,
+            "column": col
+        }
+    }
+
+    fetch(url + "notify", {
+            method: "POST",
+            body: JSON.stringify(data),
+        })
+        .then(function (r) {
+            return r.text();
+        })
+        .then(function (t) {
+            //Tratar dos erros mas não percebi como se fazia
+        })
+        .catch(console.log);
+    
+    
+        update();
+}
+
+
+function update() {
+
+    let urltemp = url + "update?nick=" + nick + "&game=" + game;
+
+    const eventSource = new EventSource(encodeURI(urltemp));
+
+    eventSource.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        
+        console.log(data);
+    }
+
 }

@@ -12,9 +12,9 @@
     <div id="GameName"> Othello </div>
 
     <div id="Access">
-        <p><img src="user.png" alt="user"> <input type=email></p>
-        <p><img src="key.png" alt="pass"> <input type=password></p>
-        <button onclick="gameon()">Login</button>
+        <p><img src="user.png" alt="user"> <input type=text id="user" value=""></p>
+        <p><img src="key.png" alt="pass"> <input type=password id="pass"></p>
+        <button onclick="login()">Login</button>
     </div>
 
     <button id="myBtn">Regras</button>
@@ -50,8 +50,8 @@
             Computador <input type="radio" name="Adversary" value="Computador">
         </p>
 
-        <button id = "Play" onclick = submit()>Vamos Jogar</button>
-        <button id ="Again" onclick= PlayAgain() disabled>Voltar a Jogar</button>
+        <button id = "Play" onclick = Submit()>Jogar</button>
+        <button id ="Leave" onclick= LeaveGame() disabled>Desistir</button>
         <button onclick= skipTurn() id ="btskip"> Passar </button>
     </div>
 
