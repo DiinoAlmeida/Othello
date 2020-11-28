@@ -64,6 +64,7 @@ function Submit() {
         ArrayInit();
     } else if (radioAdeversario[0].checked) {
         Join();
+
         TabOn(); //Colocar tabuleiro
         Adversary = "Player";
         return;
@@ -90,7 +91,7 @@ function Submit() {
 
     document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
     document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
-    //document.getElementById("PlayerTurn").innerHTML = nick;
+    document.getElementById("PlayerTurn").innerHTML = nick;
 }
 
 //Coloca o tabuleiro do jogo no ecra
@@ -415,7 +416,8 @@ function Join() {
             return r.json();
         })
         .then(function (t) {
-            game = t.game; //Tratar dos erros mas não percebi como se fazia
+            game = t.game;
+            update();
         })
         .catch(console.log);
 
@@ -469,13 +471,10 @@ function notifyServer(row, col) {
         .then(function (r) {
             return r.text();
         })
-        .then(function (t) {
-            //Tratar dos erros mas não percebi como se fazia
-        })
         .catch(console.log);
-    
-    
-        update();
+
+
+    update();
 }
 
 
@@ -487,8 +486,24 @@ function update() {
 
     eventSource.onmessage = function (event) {
         const data = JSON.parse(event.data);
-        
-        console.log(data);
-    }
 
+        updateGame(data.board, data.turn);
+        document.getElementById("DiscosB").innerHTML = "Discos Brancos: " + data.count.light;
+        document.getElementById("DiscosP").innerHTML = "Discos Pretos: " + data.count.dark;
+    }
+}
+
+function updateGame(tab, turn) {
+
+    for (let i = 0; i <= 7; i++)
+        for (let j = 0; j <= 7; j++) {
+            let id = returnId(i, j);
+            if (tab[i][j] == "dark") {
+                document.getElementById(id).className = "squareB";
+            } else if (tab[i][j] == "light") {
+                document.getElementById(id).className = "squareW";
+            }
+        }
+
+    document.getElementById("PlayerTurn").innerHTML = turn;
 }
