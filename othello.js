@@ -61,7 +61,7 @@ function Submit() {
     radioAdeversario = document.getElementsByName("Adversary");
 
     if (radioAdeversario[1].checked) {
-
+        //document.getElementById("ConfigColor").style.display = 'block'; - nao dá, meti este código na parte de cima para a cor do jogador estar a mostra
         TabOn();
         Adversary = "Computer";
         ArrayInit();
