@@ -44,6 +44,8 @@ function GameOn() {
     document.getElementById("Access").style.display = "none";
     document.getElementById("Status").style.display = 'block';
     document.getElementById("Config").style.display = 'block';
+    document.getElementById("ConfigColor").style.display = 'block';
+    document.getElementById("ConfigButtons").style.display = 'block';
     document.getElementById("myBtn").style.display = 'block';
     document.getElementById("DiscosB").style.display = 'block';
     document.getElementById("DiscosP").style.display = 'block';
@@ -59,6 +61,7 @@ function Submit() {
     radioAdeversario = document.getElementsByName("Adversary");
 
     if (radioAdeversario[1].checked) {
+
         TabOn();
         Adversary = "Computer";
         ArrayInit();

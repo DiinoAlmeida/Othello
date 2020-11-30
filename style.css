@@ -34,7 +34,7 @@ h1 {
     display: none;
     position: absolute;
     margin-top: 300px;
-    margin-left: 280px;
+    margin-left: 230px;
     font-size: 15px;
 }
 
@@ -78,8 +78,30 @@ h1 {
     text-align: center;
     top: 350px;
     left: 150px;
+    width: 250px;
     font-size: 15px;
 }
+
+#ConfigColor {
+    display: none;
+    position: absolute;
+    text-align: center;
+    top: 460px;
+    left: 150px;
+    width: 250px;
+    font-size: 15px;
+}
+
+#ConfigButtons {
+    display: none;
+    position: absolute;
+    text-align: center;
+    top: 590px;
+    left: 150px;
+    width: 250px;
+    font-size: 15px;
+}
+
 
 #Rules {
     display: none;
@@ -131,8 +153,8 @@ h1 {
     display: none;
     position: absolute;
     width:200px;
-    top: 520px;
-    left: 1330px;
+    top: 320px;
+    left: 1340px;
     text-align: center;
     text-decoration: underline;
     text-decoration-color: skyblue;
@@ -166,10 +188,10 @@ h1 {
 #Statistics {
   display: none;
   position: absolute;
-  top: 300px;
+  top: 420px;
   left: 1330px;
   width: 200px;
-  height: 140px;
+  height: auto;
   border: 1px solid black;
   text-align: center;
   padding-left: 10px;
