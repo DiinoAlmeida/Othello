@@ -19,6 +19,27 @@ window.onclick = function (event) {
     }
 }
 
+//Modal for ranking
+var modal2 = document.getElementById("myModalTwo");
+
+var btn2 = document.getElementById("myBtnTwo");
+
+var span2 = document.getElementsByClassName("close")[1];
+
+btn2.onclick = function () {
+    modal2.style.display = "block";
+}
+
+span2.onclick = function () {
+    modal2.style.display = "none";
+}
+
+window.onclick = function (event) {
+    if (event.target == modal2) {
+        modal2.style.display = "none";
+    }
+}
+
 //----------------------------------------------------------------
 class Player {
     constructor(id, Npecas) {
@@ -47,6 +68,7 @@ function GameOn() {
     document.getElementById("ConfigColor").style.display = 'block';
     document.getElementById("ConfigButtons").style.display = 'block';
     document.getElementById("myBtn").style.display = 'block';
+    document.getElementById("myBtnTwo").style.display = 'block';
     document.getElementById("DiscosB").style.display = 'block';
     document.getElementById("DiscosP").style.display = 'block';
     document.getElementById("PlayerTurn").style.display = 'block';
