@@ -35,19 +35,20 @@ h2{
   text-decoration-color: skyblue;
 }
 
+
 #myBtn {
     display: none;
     position: absolute;
     margin-top: 300px;
-    margin-left: 230px;
+    margin-left: 320px;
     font-size: 15px;
 }
 
 #myBtnTwo{
   display: none;
   position: absolute;
-  margin-top: 430px;
-  margin-left: 1375px;
+  margin-top: 300px;
+  margin-left: 148px;
   font-size: 15px;
 }
 
@@ -98,36 +99,19 @@ h2{
     left: 50px;
 }
 
+#Welcome{
+    top: 500px;
+    left: 150px;
+}
+
 #Config {
     display: none;
     position: absolute;
     text-align: center;
     top: 350px;
     left: 150px;
-    width: 250px;
     font-size: 15px;
 }
-
-#ConfigColor {
-    display: none;
-    position: absolute;
-    text-align: center;
-    top: 460px;
-    left: 150px;
-    width: 250px;
-    font-size: 15px;
-}
-
-#ConfigButtons {
-    display: none;
-    position: absolute;
-    text-align: center;
-    top: 590px;
-    left: 150px;
-    width: 250px;
-    font-size: 15px;
-}
-
 
 #Rules {
     display: none;
@@ -180,7 +164,7 @@ h2{
     position: absolute;
     width:200px;
     top: 320px;
-    left: 1340px;
+    left: 1330px;
     text-align: center;
     text-decoration: underline;
     text-decoration-color: skyblue;
@@ -199,8 +183,7 @@ h2{
 }
 
 #Winner {
-    font-size: 23px;
-    display: none;
+    font-size: 30px;
     position: absolute;
     top: 820px;
     left: 650px;
