@@ -64,49 +64,6 @@ if (!localStorage.getItem('Player1')) {
 
 ranking();
 
-/*
-    Depois de pressionar botão login colocamos todos os elementos necessários na página e criamos o tabuleiro.
-
-function gameon() {
-    "use strict";
-    document.getElementById("Access").style.display = "none";
-    document.getElementById("Status").style.display = 'block';
-    document.getElementById("Config").style.display = 'block';
-    
-    document.getElementById("DiscosB").style.display = 'block';
-    document.getElementById("DiscosP").style.display = 'block';
-    document.getElementById("PlayerTurn").style.display = 'block';
-    document.getElementById("Statistics").style.display = 'block';
-    document.getElementById("JogadorWin").style.display = 'block';
-    document.getElementById("ComputerWin").style.display = 'block';
-
-    ArrayInit();
-
-    const board = document.createElement("div");
-    board.className = "board";
-
-    for (let i = 0; i < 64; i++) {
-        const square = document.createElement("div");
-        square.className = "square";
-        square.id = i;
-        square.onclick = ((P) => {
-            return () => turnClick(P)
-        })(i);
-        board.appendChild(square);
-    }
-
-    document.body.appendChild(board);
-
-    document.getElementById("28").className = "squareB";
-    document.getElementById("35").className = "squareB";
-    document.getElementById("27").className = "squareW";
-    document.getElementById("36").className = "squareW";
-
-    document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
-    document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
-}
-*/
-
 function board() {
 
     ArrayInit();
@@ -161,56 +118,47 @@ function submit() {
     document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
     document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
 
-    if (radioAdeversario[1].checked) {
+
+    if (document.getElementById("Config").disabled == false) {
+        if (radioAdeversario[1].checked) {
+            Adversary = "AI";
+        } else if (radioAdeversario[0].checked) {
+            Adversary = "Player";
+            document.getElementById("PlayerTurn").innerHTML = nick;
+            Join();
+            return;
+        } else {
+            window.alert("Tem de escolher uma opção!");
+            return;
+        }
+    } else {
         Adversary = "AI";
-    } else if (radioAdeversario[0].checked) {
-        Adversary = "Player";
+    }
+
+    if (radioCor[0].checked) {
+        Player1.cor = "black";
+        Player1.className = "squareB";
+        Player2.cor = "white";
+        Player2.className = "squareW";
+        Turn = Player1;
+    } else if (radioCor[1].checked) {
+        Player1.cor = "white";
+        Player1.className = "squareW";
+        Player2.cor = "black";
+        Player2.className = "squareB";
+        Turn = Player2;
+        bestMove();
+    } else {
+        window.alert("Tem de escolher uma opção!");
+        return;
+    }
+
+    if (nick == "undefined") {
+        document.getElementById("PlayerTurn").innerHTML = "Jogador";
+    } else {
         document.getElementById("PlayerTurn").innerHTML = nick;
-        Join();
-        return;
-    } else {
-        window.alert("Tem de escolher uma opção!");
-        return;
+
     }
-
-    if (radioCor[0].checked) {
-        Player1.cor = "black";
-        Player1.className = "squareB";
-        Player2.cor = "white";
-        Player2.className = "squareW";
-        Turn = Player1;
-    } else if (radioCor[1].checked) {
-        Player1.cor = "white";
-        Player1.className = "squareW";
-        Player2.cor = "black";
-        Player2.className = "squareB";
-        Turn = Player2;
-        bestMove();
-    } else {
-        window.alert("Tem de escolher uma opção!");
-        return;
-    }
-
-
-    if (radioCor[0].checked) {
-        Player1.cor = "black";
-        Player1.className = "squareB";
-        Player2.cor = "white";
-        Player2.className = "squareW";
-        Turn = Player1;
-    } else if (radioCor[1].checked) {
-        Player1.cor = "white";
-        Player1.className = "squareW";
-        Player2.cor = "black";
-        Player2.className = "squareB";
-        Turn = Player2;
-        bestMove();
-    } else {
-        window.alert("Tem de escolher uma opção!");
-        return;
-    }
-
-    document.getElementById("PlayerTurn").innerHTML = "Computador";
 }
 
 //Vez do computador a jogar
@@ -240,7 +188,7 @@ function bestMove() {
 //Depois de clicarmos no tabuleiro
 function turnClick(indice) {
 
-    if (Adversary == "Computer" && playMove(indice) == 1) {
+    if (Adversary == "AI" && playMove(indice) == 1) {
         document.getElementById(indice).disabled = "true";
         swapTurn(); //IA
         if (CheckEndGame() == false) { // Se a IA puder jogar joga, caso contrario passa a jogada
@@ -471,14 +419,17 @@ function LeaveGame() {
         document.getElementById("Winner").style.display = "block";
         document.getElementById("Skip").style.display = "none";
         document.getElementById("PlayerTurn").style.display = "none";
-        document.getElementById("Access").style.display = "block";
+        if (!document.getElementById("Welcome")) {
+            ranking();
+            localStorage.setItem("Player1", Player1.vitorias.toString());
+            localStorage.setItem("Player2", Player2.vitorias.toString());
+            document.getElementById("Access").style.display = "block";
+        }
         document.getElementById("btskip").disabled = true;
         document.getElementById("Leave").disabled = true;
         document.getElementById("Play").disabled = false;
         document.getElementById("Winner").innerHTML = "Vencedor: Computador";
-        ranking();
-        localStorage.setItem("Player1", Player1.vitorias.toString());
-        localStorage.setItem("Player2", Player2.vitorias.toString());
+
     }
 
     document.getElementById("DiscosB").innerHTML = "";
@@ -518,14 +469,18 @@ function login() {
                 document.getElementById("Leave").disabled = true;
                 document.getElementById("btskip").disabled = true;
             } else {
-                document.getElementById("Access").style.display = "none";
-                //State = "Connected";
                 serverRanking();
 
                 let div = document.createElement("div");
                 div.id = "Welcome";
                 div.innerHTML = "Bem vindo, " + nick + "!";
                 document.body.appendChild(div);
+
+
+                document.getElementById("ConfigButtons1").id = "ConfigButtons2";
+                document.getElementById("Access").style.display = "none";
+                document.getElementById("Config").style.display = 'block';
+
             }
         })
         .catch(console.log);
@@ -551,14 +506,10 @@ function Join() {
 
             if (t.error) {
                 window.alert(t.error);
-                //document.getElementById("Status").style.display = "block";
-                //document.getElementById("DiscosB").style.display = 'block';
-                //document.getElementById("DiscosP").style.display = 'block';
                 document.getElementById("PlayerTurn").style.display = 'block';
                 document.getElementById("Leave").disabled = false;
                 document.getElementById("btskip").disabled = false;
                 document.getElementById("Play").disabled = true;
-                //GameOver();
             } else {
                 game = t.game;
                 update();
@@ -606,12 +557,7 @@ function update() {
                 }
             }
     }
-
-
-
 }
-
-
 
 
 function notifyServer(row, col) {
@@ -630,10 +576,7 @@ function notifyServer(row, col) {
             method: "POST",
             body: JSON.stringify(data),
         })
-        .then(function (r) {
-            //window.alert(r.text);
-
-        })
+        .then(function (r) {})
         .catch(console.log);
 }
 

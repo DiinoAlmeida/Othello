@@ -92,19 +92,40 @@ h1 {
 }
 
 #Config {
+    display:none;
     position: absolute;
     text-align: center;
-    top: 350px;
+    top: 460px;
     left: 150px;
+    width: 250px;
     font-size: 15px;
 }
 
-.ConfigPlayer{
-    display: none;
+
+#ConfigColor {
     position: absolute;
     text-align: center;
     top: 350px;
     left: 150px;
+    width: 250px;
+    font-size: 15px;
+}
+
+#ConfigButtons1 {
+    position: absolute;
+    text-align: center;
+    top: 480px;
+    left: 150px;
+    width: 250px;
+    font-size: 15px;
+}
+
+#ConfigButtons2 {
+    position: absolute;
+    text-align: center;
+    top: 590px;
+    left: 150px;
+    width: 250px;
     font-size: 15px;
 }
 
