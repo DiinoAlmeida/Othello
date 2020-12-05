@@ -30,14 +30,7 @@ h1 {
     border-radius: 3px;
 }
 
-h2{
-  text-decoration: underline;
-  text-decoration-color: skyblue;
-}
-
-
 #myBtn {
-    display: none;
     position: absolute;
     margin-top: 300px;
     margin-left: 320px;
@@ -45,7 +38,6 @@ h2{
 }
 
 #myBtnTwo{
-  display: none;
   position: absolute;
   margin-top: 300px;
   margin-left: 148px;
@@ -99,12 +91,15 @@ h2{
     left: 50px;
 }
 
-#Welcome{
-    top: 500px;
+#Config {
+    position: absolute;
+    text-align: center;
+    top: 350px;
     left: 150px;
+    font-size: 15px;
 }
 
-#Config {
+.ConfigPlayer{
     display: none;
     position: absolute;
     text-align: center;
@@ -113,7 +108,7 @@ h2{
     font-size: 15px;
 }
 
-#Rules {
+.Rules {
     display: none;
     position: absolute;
     line-height: 2.0;
@@ -124,13 +119,20 @@ h2{
 
 #Access {
     position: absolute;
-    top: 170px;
-    left: 50px;
+    top: 50px;
+    left: 1330px;
+}
+
+#Welcome{
+    position: absolute;
+    top: 75px;
+    left: 1330px;
+    font-size: 20px;
 }
 
 #Status {
-    font-size: 23px;
     display: none;
+    font-size: 23px;
     position: absolute;
     top: 130px;
     left: 830px;
@@ -163,7 +165,7 @@ h2{
     display: none;
     position: absolute;
     width:200px;
-    top: 320px;
+    top: 520px;
     left: 1330px;
     text-align: center;
     text-decoration: underline;
@@ -183,7 +185,8 @@ h2{
 }
 
 #Winner {
-    font-size: 30px;
+    font-size: 23px;
+    display: none;
     position: absolute;
     top: 820px;
     left: 650px;
@@ -197,10 +200,10 @@ h2{
 #Statistics {
   display: none;
   position: absolute;
-  top: 420px;
+  top: 300px;
   left: 1330px;
   width: 200px;
-  height: auto;
+  height: 140px;
   border: 1px solid black;
   text-align: center;
   padding-left: 10px;
@@ -209,7 +212,7 @@ h2{
   border-radius: 3px;
 }
 
-.board {
+#board {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;

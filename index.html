@@ -10,7 +10,7 @@
 <body>
 
     <div id="GameName"> Othello </div>
-    
+
     <div id="Access">
         <p><img src="user.png" alt="user"> <input type=text id="user" value=""></p>
         <p><img src="key.png" alt="pass"> <input type=password id="pass"></p>
@@ -20,7 +20,7 @@
     <button id="myBtn">Regras</button>
 
     <!-- Caixa de diálogo com as regras-->
-    <div id="regras" class="modal">
+    <div id="Rules" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Objetivo do jogo</h2>
@@ -40,25 +40,28 @@
     </div>
 
     <button id="myBtnTwo">Classificações</button>
-    <div id="myModalTwo" class="modal">
+    <div id="Ranking" class="modal">
       <div class="modal-contenttwo" id = modaltwo>
       </div></div>
     
-    
-    
     <div id="Config">
+        <div>
         <h1>Cor do jogador:</h1>
         <p> Preto <input type="radio" name = "Color" value= "Preto">
             Branco <input type="radio" name = "Color" value="Branco">
         </p>
-
-        <h1>Adversário: </h1>
+        </div>
+        
+        <div id = "ConfigPlayer">
+             <h1>Adversário: </h1>
         <p>Jogador <input type="radio" name="Adversary" value = "Jogador">
             Computador <input type="radio" name="Adversary" value="Computador">
         </p>
+        </div>
+       
 
-        <button id = "Play" onclick = Submit()>Jogar</button>
-        <button id ="Leave" onclick= LeaveGame() disabled>Desistir</button>
+        <button id = "Play" onclick = submit()>Vamos Jogar</button>
+        <button id ="Leave" onclick= LeaveGame()  disabled>Desistir</button>
         <button onclick= skipTurn() id ="btskip" disabled> Passar </button>
     </div>
 
