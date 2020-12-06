@@ -205,6 +205,18 @@ h1 {
     text-decoration-color: skyblue;
 }
 
+#SkipServer {
+    font-size: 23px;
+    width:496px;
+    display: none;
+    position: absolute;
+    top: 850px;
+    left: 650px;
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-color: skyblue;
+}
+
 #Winner {
     font-size: 23px;
     display: none;
@@ -267,4 +279,28 @@ h1 {
     background-color: white;
     border: 1px solid black;
     cursor: pointer;
+}
+
+
+
+table {
+  border: 1px solid skyblue;
+  padding: 12px;
+  line-height: 1.5;
+  width: 100%;
+  text-align: center;
+}
+
+th {
+  padding: 3px;
+  border-bottom: 1px solid skyblue;
+}
+
+td {
+  padding: 3px;
+  border-bottom: 1px solid skyblue;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
 }

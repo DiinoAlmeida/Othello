@@ -119,7 +119,7 @@ function submit() {
     document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
 
 
-    if (document.getElementById("Config").disabled == false) {
+    if (document.getElementById("Config").style.display == "block") {
         if (radioAdeversario[1].checked) {
             Adversary = "AI";
         } else if (radioAdeversario[0].checked) {
@@ -321,7 +321,9 @@ function EndGame() {
     document.getElementById("Skip").style.display = 'none';
     document.getElementById("PlayerTurn").style.display = 'none';
     document.getElementById("Winner").style.display = 'block';
-    document.getElementById("Access").style.display = "block";
+    if(document.getElementById("Welcome").style.display == "none"){
+     document.getElementById("Access").style.display = "block";   
+    }
     document.getElementById("btskip").disabled = true;
     document.getElementById("Leave").disabled = true;
     document.getElementById("Play").disabled = false;
@@ -342,8 +344,14 @@ function EndGame() {
 
 //Passar a jogada
 function skipTurn() {
+if(Adversary == "Player"){
+        notifyServerSkip();
+        document.getElementById("SkipServer").style.display = "none";
+        return;
+    }
+    
     if (CheckEndGame() == false) {
-        document.getElementById("Skip").style.display = 'block';
+        document.getElementById("btskip").style.display = 'block';
     } else {
         swapTurn();
         bestMove();
@@ -440,7 +448,7 @@ function LeaveGame() {
 //Server--------------------------------------------------------------------------
 var url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
 
-var nick;
+var nick = "Jogador";
 var pass;
 var group = "17";
 var game;
@@ -539,8 +547,10 @@ function update() {
             eventSource.close();
             return;
         } else if (data.skip !== undefined) {
-            document.getElementById("btskip").disabled = false;
-            window.alert("Tem de passar a vez");
+            if(nick == data.turn){
+                document.getElementById("btskip").disabled = false;
+                document.getElementById("SkipServer").style.display = "block";
+            }
         } else {
             document.getElementById("DiscosB").innerHTML = "Discos Brancos: " + data.count.light;
             document.getElementById("DiscosP").innerHTML = "Discos Pretos: " + data.count.dark;
@@ -576,7 +586,6 @@ function notifyServer(row, col) {
             method: "POST",
             body: JSON.stringify(data),
         })
-        .then(function (r) {})
         .catch(console.log);
 }
 
@@ -592,9 +601,6 @@ function notifyServerSkip() {
     fetch(url + "notify", {
             method: "POST",
             body: JSON.stringify(data),
-        })
-        .then(function (r) {
-            return r.text();
         })
         .catch(console.log);
 }
@@ -682,9 +688,9 @@ function printRanking(data) {
     for (let i = 0; i < 10; i++) {
         let row = document.createElement("tr");
         table.appendChild(row);
-        let nome = document.createElement("th");
-        let vitorias = document.createElement("th");
-        let jogos = document.createElement("th");
+        let nome = document.createElement("td");
+        let vitorias = document.createElement("td");
+        let jogos = document.createElement("td");
         nome.innerHTML = data[i].nick;
         vitorias.innerHTML = data[i].victories
         jogos.innerHTML = data[i].games;
