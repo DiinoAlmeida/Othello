@@ -339,7 +339,11 @@ function EndGame() {
     localStorage.setItem('Player1', Player1.vitorias.toString());
     localStorage.setItem('Player2', Player2.vitorias.toString());
 
-    ranking();
+    if(nick != "Jogador"){
+        serverRanking();
+    }else{
+        ranking();   
+    }
 }
 
 //Passar a jogada
@@ -446,7 +450,8 @@ function LeaveGame() {
 
 
 //Server--------------------------------------------------------------------------
-var url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
+var url = "http://localhost:8117/";
+//var url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
 
 var nick = "Jogador";
 var pass;
@@ -552,14 +557,15 @@ function update() {
                 document.getElementById("SkipServer").style.display = "block";
             }
         } else {
-            document.getElementById("DiscosB").innerHTML = "Discos Brancos: " + data.count.light;
-            document.getElementById("DiscosP").innerHTML = "Discos Pretos: " + data.count.dark;
+            document.getElementById("DiscosB").innerHTML = "Discos Brancos: " + data.light;
+            document.getElementById("DiscosP").innerHTML = "Discos Pretos: " + data.dark;
             document.getElementById("PlayerTurn").innerHTML = data.turn;
         }
 
         for (let i = 0; i <= 7; i++)
             for (let j = 0; j <= 7; j++) {
                 let id = returnId(i, j);
+                //console.log(data.Board[i][j]);
                 if (data.board[i][j] == "dark") {
                     document.getElementById(id).className = "squareB";
                 } else if (data.board[i][j] == "light") {
