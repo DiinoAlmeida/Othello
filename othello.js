@@ -105,20 +105,11 @@ function submit() {
     radioCor = document.getElementsByName("Color");
     radioAdeversario = document.getElementsByName("Adversary");
 
+    document.getElementById("Leave").disabled = true;
+    document.getElementById("btskip").disabled = true;
+
     board();
-    document.getElementById("Status").style.display = "block";
-    document.getElementById("DiscosB").style.display = 'block';
-    document.getElementById("DiscosP").style.display = 'block';
-    document.getElementById("PlayerTurn").style.display = 'block';
-    document.getElementById("Access").style.display = "none";
-    document.getElementById("Winner").style.display = "none";
-    document.getElementById("Leave").disabled = false;
-    document.getElementById("btskip").disabled = false;
-    document.getElementById("Play").disabled = true;
-    document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
-    document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
-
-
+    
     if (document.getElementById("Config").style.display == "block") {
         if (radioAdeversario[1].checked) {
             Adversary = "AI";
@@ -152,6 +143,18 @@ function submit() {
         window.alert("Tem de escolher uma opção!");
         return;
     }
+
+    document.getElementById("Status").style.display = "block";
+    document.getElementById("DiscosB").style.display = 'block';
+    document.getElementById("DiscosP").style.display = 'block';
+    document.getElementById("PlayerTurn").style.display = 'block';
+    document.getElementById("Access").style.display = "none";
+    document.getElementById("Winner").style.display = "none";
+    document.getElementById("Leave").disabled = false;
+    document.getElementById("btskip").disabled = false;
+    document.getElementById("Play").disabled = true;
+    document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
+    document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
 
     if (nick == "undefined") {
         document.getElementById("PlayerTurn").innerHTML = "Jogador";
@@ -321,8 +324,8 @@ function EndGame() {
     document.getElementById("Skip").style.display = 'none';
     document.getElementById("PlayerTurn").style.display = 'none';
     document.getElementById("Winner").style.display = 'block';
-    if(document.getElementById("Welcome").style.display == "none"){
-     document.getElementById("Access").style.display = "block";   
+    if (document.getElementById("Welcome").style.display == "none") {
+        document.getElementById("Access").style.display = "block";
     }
     document.getElementById("btskip").disabled = true;
     document.getElementById("Leave").disabled = true;
@@ -339,21 +342,21 @@ function EndGame() {
     localStorage.setItem('Player1', Player1.vitorias.toString());
     localStorage.setItem('Player2', Player2.vitorias.toString());
 
-    if(nick != "Jogador"){
+    if (nick != "Jogador") {
         serverRanking();
-    }else{
-        ranking();   
+    } else {
+        ranking();
     }
 }
 
 //Passar a jogada
 function skipTurn() {
-if(Adversary == "Player"){
+    if (Adversary == "Player") {
         notifyServerSkip();
         document.getElementById("SkipServer").style.display = "none";
         return;
     }
-    
+
     if (CheckEndGame() == false) {
         document.getElementById("btskip").style.display = 'block';
     } else {
@@ -499,7 +502,6 @@ function login() {
         .catch(console.log);
 }
 
-
 function Join() {
 
     data = {
@@ -542,26 +544,6 @@ function update() {
     eventSource.onmessage = function (event) {
         const data = JSON.parse(event.data);
 
-        if (data.winner !== undefined) {
-            document.getElementById("Winner").style.display = "block";
-            document.getElementById("PlayerTurn").style.display = "none";
-            document.getElementById("Leave").disabled = true;
-            document.getElementById("btskip").disabled = true;
-            document.getElementById("Play").disabled = false;
-            document.getElementById("Winner").innerHTML = "Vencedor: " + data.winner;
-            eventSource.close();
-            return;
-        } else if (data.skip !== undefined) {
-            if(nick == data.turn){
-                document.getElementById("btskip").disabled = false;
-                document.getElementById("SkipServer").style.display = "block";
-            }
-        } else {
-            document.getElementById("DiscosB").innerHTML = "Discos Brancos: " + data.light;
-            document.getElementById("DiscosP").innerHTML = "Discos Pretos: " + data.dark;
-            document.getElementById("PlayerTurn").innerHTML = data.turn;
-        }
-
         for (let i = 0; i <= 7; i++)
             for (let j = 0; j <= 7; j++) {
                 let id = returnId(i, j);
@@ -572,6 +554,27 @@ function update() {
                     document.getElementById(id).className = "squareW";
                 }
             }
+
+        if (data.winner !== undefined) {
+            document.getElementById("Winner").style.display = "block";
+            document.getElementById("PlayerTurn").style.display = "none";
+            document.getElementById("Leave").disabled = true;
+            document.getElementById("btskip").disabled = true;
+            document.getElementById("Play").disabled = false;
+            document.getElementById("Winner").innerHTML = "Vencedor: " + data.winner;
+            eventSource.close();
+            return;
+        } else if (data.skip !== undefined) {
+            if (nick == data.turn) {
+                document.getElementById("btskip").disabled = false;
+                document.getElementById("SkipServer").style.display = "block";
+            }
+        } else {
+            document.getElementById("DiscosB").innerHTML = "Discos Brancos: " + data.light;
+            document.getElementById("DiscosP").innerHTML = "Discos Pretos: " + data.dark;
+            document.getElementById("PlayerTurn").innerHTML = data.turn;
+        }
+
     }
 }
 
@@ -611,7 +614,12 @@ function notifyServerSkip() {
         .catch(console.log);
 }
 
-
+function chooseRanking(){
+    
+    if(!document.getElementById("Welcome")) ranking();
+    else serverRanking();
+       
+}
 
 //Ranking
 function deleteRanking() {
@@ -668,7 +676,6 @@ function printRanking(data) {
 
     deleteRanking();
 
-    data = data.ranking;
     let btn = document.getElementById("modaltwo");
 
     const h3 = document.createElement("h3");
@@ -691,18 +698,22 @@ function printRanking(data) {
     def.appendChild(win);
     def.appendChild(games);
 
-    for (let i = 0; i < 10; i++) {
+    let i;
+    let count = 0;
+    for (i in data.Data) {
+        if(count == 10) return;
         let row = document.createElement("tr");
         table.appendChild(row);
         let nome = document.createElement("td");
         let vitorias = document.createElement("td");
         let jogos = document.createElement("td");
-        nome.innerHTML = data[i].nick;
-        vitorias.innerHTML = data[i].victories
-        jogos.innerHTML = data[i].games;
+        nome.innerHTML = data.Data[i].nick;
+        vitorias.innerHTML = data.Data[i].victories;
+        jogos.innerHTML = data.Data[i].games;
 
         row.appendChild(nome);
         row.appendChild(vitorias);
         row.appendChild(jogos);
+        count++;
     }
 }
