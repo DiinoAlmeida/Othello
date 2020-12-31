@@ -106,6 +106,10 @@ function doPost(pathname, request, response) {
             notify(request, response);
             break;
 
+        case '/leave':
+            leave(request, response);
+            break;
+
         default:
             response.writeHead(400, headers.plain);
             response.end();
@@ -132,12 +136,12 @@ function register(request, response, FileData) {
 
         BodyData = JSON.parse(BodyData);
 
-        if (BodyData.nick == "") {
+        if (BodyData.nick === "") {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 "error": "Name is not valid"
             }));
             return;
-        } else if (BodyData.pass == "") {
+        } else if (BodyData.pass === "") {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 "error": "Password is not valid"
             }));
@@ -262,7 +266,7 @@ function notify(request, response) {
         BodyData = JSON.parse(BodyData);
         let i, notifyError;
 
-        if (BodyData.move.row == undefined || BodyData.move.column == undefined) {
+        if (BodyData.move.row == null || BodyData.move.column == null) {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 error: "move lacks property column or row"
             }));
@@ -401,6 +405,87 @@ function update(request, response, pathname, query) {
             }
         }
     }
+}
+
+function leave(request, response) {
+
+    let BodyData = {};
+
+    request.on('data', chunk => {
+        BodyData = chunk;
+    });
+
+    request.on('end', () => {
+        BodyData = JSON.parse(BodyData);
+
+
+        if (BodyData.nick == null || BodyData.pass == null || BodyData.game == null) {
+            WriteAnswer(response, 400, headers.plain, JSON.stringify({
+                error: "Data is undefined"
+            }));
+            return;
+        }
+
+        let i;
+        let winner = null;
+        let GameFound = 0;
+
+        for (i in Games) {
+            if (Games[i].Player1 == BodyData.nick || Games[i].Player2 == BodyData.nick) {
+                GameFound = 1;
+                if (Games[i].Player2Response == null) {
+
+                    let Data = {
+                        'winner': winner,
+                        'board': Games[i].Board,
+                        'turn': Games[i].Turn,
+                        'dark': Games[i].NPlayer1,
+                        'light': Games[i].NPlayer2
+                    };
+
+                    Data = JSON.stringify(Data);
+                    Games[i].Player1Response.write('data: ' + Data + '\n\n');
+                    Games[i].Player1Response.end();
+                    Games.splice(i, 1);
+                    response.writeHead(200, headers.plain);
+                    response.end();
+                    return;
+
+                } else if (Games[i].Player2Response != null && Games[i].Player1Response != null) {
+
+                    if (Games[i].Player1 == BodyData.nick) {
+                        winner = Games[i].Player2;
+                    } else {
+                        winner = Games[i].Player1;
+                    }
+
+                    let Data = {
+                        'winner': winner,
+                        'board': Games[i].Board,
+                        'turn': Games[i].Turn,
+                        'dark': Games[i].NPlayer1,
+                        'light': Games[i].NPlayer2
+                    };
+
+                    Data = JSON.stringify(Data);
+                    Games[i].Player1Response.write('data: ' + Data + '\n\n');
+                    Games[i].Player2Response.write('data: ' + Data + '\n\n');
+                    Games[i].Player1Response.end();
+                    Games[i].Player2Response.end();
+                    Games.splice(i, 1);
+                    response.writeHead(200, headers.plain);
+                    response.end();
+                    return;
+                }
+            }
+        }
+        
+        if(GameFound == 0){
+            WriteAnswer(response, 400, headers.plain, JSON.stringify({
+                error: "Game not found"
+            }));
+        }
+    });
 }
 
 //Funções Auxiliares

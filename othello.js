@@ -109,12 +109,23 @@ function submit() {
     document.getElementById("btskip").disabled = true;
 
     board();
-    
+
     if (document.getElementById("Config").style.display == "block") {
         if (radioAdeversario[1].checked) {
             Adversary = "AI";
         } else if (radioAdeversario[0].checked) {
             Adversary = "Player";
+            document.getElementById("Status").style.display = "block";
+            document.getElementById("DiscosB").style.display = 'block';
+            document.getElementById("DiscosP").style.display = 'block';
+            document.getElementById("PlayerTurn").style.display = 'block';
+            document.getElementById("Access").style.display = "none";
+            document.getElementById("Winner").style.display = "none";
+            document.getElementById("Leave").disabled = false;
+            document.getElementById("btskip").disabled = false;
+            document.getElementById("Play").disabled = true;
+            document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
+            document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
             document.getElementById("PlayerTurn").innerHTML = nick;
             Join();
             return;
@@ -428,7 +439,6 @@ function LeaveGame() {
             })
             .catch(console.log);
 
-        serverRanking();
     } else {
         Player2.vitorias++;
         document.getElementById("Winner").style.display = "block";
@@ -547,7 +557,6 @@ function update() {
         for (let i = 0; i <= 7; i++)
             for (let j = 0; j <= 7; j++) {
                 let id = returnId(i, j);
-                //console.log(data.Board[i][j]);
                 if (data.board[i][j] == "dark") {
                     document.getElementById(id).className = "squareB";
                 } else if (data.board[i][j] == "light") {
@@ -577,7 +586,6 @@ function update() {
 
     }
 }
-
 
 function notifyServer(row, col) {
 
@@ -614,11 +622,11 @@ function notifyServerSkip() {
         .catch(console.log);
 }
 
-function chooseRanking(){
-    
-    if(!document.getElementById("Welcome")) ranking();
+function chooseRanking() {
+
+    if (!document.getElementById("Welcome")) ranking();
     else serverRanking();
-       
+
 }
 
 //Ranking
@@ -701,7 +709,7 @@ function printRanking(data) {
     let i;
     let count = 0;
     for (i in data.Data) {
-        if(count == 10) return;
+        if (count == 10) return;
         let row = document.createElement("tr");
         table.appendChild(row);
         let nome = document.createElement("td");
