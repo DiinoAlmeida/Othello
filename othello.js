@@ -122,7 +122,6 @@ function submit() {
             document.getElementById("Access").style.display = "none";
             document.getElementById("Winner").style.display = "none";
             document.getElementById("Leave").disabled = false;
-            document.getElementById("btskip").disabled = false;
             document.getElementById("Play").disabled = true;
             document.getElementById("DiscosB").innerHTML = "Discos brancos: 2";
             document.getElementById("DiscosP").innerHTML = "Discos pretos: 2";
@@ -335,9 +334,7 @@ function EndGame() {
     document.getElementById("Skip").style.display = 'none';
     document.getElementById("PlayerTurn").style.display = 'none';
     document.getElementById("Winner").style.display = 'block';
-    if (document.getElementById("Welcome").style.display == "none") {
-        document.getElementById("Access").style.display = "block";
-    }
+    if (!document.getElementById("Welcome")) document.getElementById("Access").style.display = "block";
     document.getElementById("btskip").disabled = true;
     document.getElementById("Leave").disabled = true;
     document.getElementById("Play").disabled = false;
@@ -365,6 +362,7 @@ function skipTurn() {
     if (Adversary == "Player") {
         notifyServerSkip();
         document.getElementById("SkipServer").style.display = "none";
+        document.getElementById("btskip").disabled = true;
         return;
     }
 
@@ -463,8 +461,8 @@ function LeaveGame() {
 
 
 //Server--------------------------------------------------------------------------
-var url = "http://localhost:8117/";
-//var url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
+//var url = "http://localhost:8117/";
+var url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
 
 var nick = "Jogador";
 var pass;
@@ -575,6 +573,7 @@ function update() {
             return;
         } else if (data.skip !== undefined) {
             if (nick == data.turn) {
+                document.getElementById("PlayerTurn").innerHTML = data.turn;
                 document.getElementById("btskip").disabled = false;
                 document.getElementById("SkipServer").style.display = "block";
             }
