@@ -27,6 +27,7 @@ var btn2 = document.getElementById("myBtnTwo");
 var span2 = document.getElementsByClassName("close")[1];
 
 btn2.onclick = function () {
+    chooseRanking();
     modal2.style.display = "block";
 }
 
@@ -367,7 +368,7 @@ function skipTurn() {
     }
 
     if (CheckEndGame() == false) {
-        document.getElementById("btskip").style.display = 'block';
+        document.getElementById("Skip").style.display = 'block';
     } else {
         swapTurn();
         bestMove();
@@ -462,7 +463,7 @@ function LeaveGame() {
 
 //Server--------------------------------------------------------------------------
 //var url = "http://localhost:8117/";
-var url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
+var url = "http://twserver.alunos.dcc.fc.up.pt:8117/";
 
 var nick = "Jogador";
 var pass;
@@ -493,7 +494,7 @@ function login() {
                 document.getElementById("Leave").disabled = true;
                 document.getElementById("btskip").disabled = true;
             } else {
-                serverRanking();
+                //serverRanking();
 
                 let div = document.createElement("div");
                 div.id = "Welcome";
@@ -573,16 +574,14 @@ function update() {
             return;
         } else if (data.skip !== undefined) {
             if (nick == data.turn) {
-                document.getElementById("PlayerTurn").innerHTML = data.turn;
                 document.getElementById("btskip").disabled = false;
                 document.getElementById("SkipServer").style.display = "block";
             }
         } else {
             document.getElementById("DiscosB").innerHTML = "Discos Brancos: " + data.light;
             document.getElementById("DiscosP").innerHTML = "Discos Pretos: " + data.dark;
-            document.getElementById("PlayerTurn").innerHTML = data.turn;
         }
-
+        document.getElementById("PlayerTurn").innerHTML = data.turn;
     }
 }
 
@@ -644,7 +643,6 @@ function deleteRanking() {
 
 function serverRanking() {
 
-
     fetch(url + "ranking", {
             method: "POST",
             body: JSON.stringify(""),
@@ -653,6 +651,7 @@ function serverRanking() {
             return r.json();
         })
         .then(function (t) {
+        console.log(t);
             printRanking(t);
 
         })

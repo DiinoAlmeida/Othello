@@ -22,7 +22,7 @@ class Game {
 
 //Verificar se file existe, caso contrário cria-o
 fs.access('./data.json', fs.F_OK, (err) => {
-
+    
     let data = {
         "Data": [],
     }
@@ -41,6 +41,7 @@ function WriteAnswer(response, status, headers, menssage) {
 
 function EndResponse(response, status, headers) {
     response.writeHead(status, headers);
+    response.write(JSON.stringify({}));
     response.end();
 }
 
@@ -62,7 +63,7 @@ module.exports.doPost = function (pathname, request, response) {
 
     switch (pathname) {
         case '/ranking':
-            WriteAnswer(response, 200, headers.plain, JSON.stringify(FileData));
+            ranking(response, FileData);
             break;
 
         case '/register':
@@ -88,6 +89,11 @@ module.exports.doPost = function (pathname, request, response) {
     }
 }
 
+function ranking(response, FileData){
+       FileData = JSON.stringify(FileData);
+       WriteAnswer(response, 200, headers.plain, FileData);
+}
+
 function register(request, response, FileData) {
 
     let BodyData = "";
@@ -101,7 +107,6 @@ function register(request, response, FileData) {
 
         BodyData = JSON.parse(BodyData);
 
-        console.log(BodyData.nick + "     " + BodyData.pass);
         if (BodyData.nick === undefined) {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 "error": "Name is not valid"
@@ -187,13 +192,13 @@ function join(request, response) {
             return;
         }
 
-        if(!CheckNickPass(BodyData.nick, BodyData.pass)){
+        if (!CheckNickPass(BodyData.nick, BodyData.pass)) {
             WriteAnswer(response, 401, headers.plain, JSON.stringify({
                 "error": "Nick and Pass don't match"
             }));
             return;
         }
-        
+
         let i, inGame;
 
         for (i in Games) {
@@ -251,13 +256,8 @@ function notify(request, response) {
 
     request.on('end', () => {
         BodyData = JSON.parse(BodyData);
-        
-        if (BodyData.group === undefined) {
-            WriteAnswer(response, 400, headers.plain, JSON.stringify({
-                "error": "Group is undefined"
-            }));
-            return;
-        } else if (BodyData.nick === undefined) {
+
+        if (BodyData.nick === undefined) {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 "error": "Nick is undefined"
             }));
@@ -267,40 +267,40 @@ function notify(request, response) {
                 "error": "Pass is undefined"
             }));
             return;
-        }else if(BodyData.move === undefined){
+        } else if (BodyData.move === undefined) {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 "error": "Move is undefined"
             }));
             return;
-        }else if(BodyData.game === undefined){
+        } else if (BodyData.game === undefined) {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 "error": "Game is undefined"
             }));
             return;
         }
-        
-        if(!CheckNickPass(BodyData.nick, BodyData.pass)){
+
+        if (!CheckNickPass(BodyData.nick, BodyData.pass)) {
             WriteAnswer(response, 401, headers.plain, JSON.stringify({
                 "error": "Nick and Pass don't match"
             }));
             return;
         }
-        
-        let result = CheckGame(BodyData.game); 
-        if(result == -1){
+
+        let result = CheckGame(BodyData.game);
+        if (result == -1) {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 "error": "Game not found"
             }));
             return;
-        }else if(Games[result].Player1 === "" || Games[result].Player2 === ""){
-             WriteAnswer(response, 400, headers.plain, JSON.stringify({
+        } else if (Games[result].Player1 === "" || Games[result].Player2 === "") {
+            WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 "error": "Game not started"
             }));
             return;
         }
-        
+
         let i, notifyError;
-        
+
         if (BodyData.move === null) { //Caso seja preciso passar a jogada
 
             for (i in Games) {
@@ -372,8 +372,10 @@ function notify(request, response) {
                             let winner;
                             if (Games[i].NPlayer1 > Games[i].NPlayer2) {
                                 winner = Games[i].Player1;
+                                UpdateJSON(Games[i].Player1, Games[i].Player2);
                             } else if (Games[i].NPlayer1 < Games[i].NPlayer2) {
                                 winner = Games[i].Player2;
+                                UpdateJSON(Games[i].Player2, Games[i].Player1);
                             } else {
                                 winner = null;
                             }
@@ -396,7 +398,7 @@ function notify(request, response) {
                             return;
 
                         } else if (CheckSkip(Games[i]) == true) {
-                    
+
                             Data = {
                                 'board': Games[i].Board,
                                 'turn': Games[i].Turn,
@@ -449,132 +451,145 @@ function update(request, response, pathname, query) {
         return;
     }
 
-    let i;
-    for (i in Games) {
-        if (Games[i].Hash == query.game) {
-            if (Games[i].Player1 == query.nick && Games[i].Player1Response == null) {
-                Games[i].Player1Response = response;
-                response.writeHead(200, headers.sse);
-                return;
-            } else if (Games[i].Player2 == query.nick && Games[i].Player2Response == null) {
-                Games[i].Player2Response = response;
-                response.writeHead(200, headers.sse);
+    let result = CheckGame(query.game);
+    if (result == -1) {
+        WriteAnswer(response, 400, headers.plain, JSON.stringify({
+            "error": "Game not found"
+        }));
+        return;
+    } else if (Games[result].Player1 != query.nick && Games[result].Player2 != query.nick) {
+        WriteAnswer(response, 400, headers.plain, JSON.stringify({
+            "error": "Don't exist players with that nick in the game"
+        }));
+        return;
+    }
 
-                let data = {
-                    'board': Games[i].Board,
-                    'turn': Games[i].Turn,
-                    'dark': Games[i].NPlayer1,
-                    'light': Games[i].NPlayer2
-                };
+    if (Games[result].Player1 == query.nick && Games[result].Player1Response == null) {
+        Games[result].Player1Response = response;
+        response.writeHead(200, headers.sse);
+        return;
+    } else if (Games[result].Player2 == query.nick && Games[result].Player2Response == null) {
+        Games[result].Player2Response = response;
+        response.writeHead(200, headers.sse);
 
-                data = JSON.stringify(data);
+        let data = {
+            'board': Games[result].Board,
+            'turn': Games[result].Turn,
+            'dark': Games[result].NPlayer1,
+            'light': Games[result].NPlayer2
+        };
 
-                Games[i].Player1Response.write('data: ' + data + '\n\n');
-                Games[i].Player2Response.write('data: ' + data + '\n\n');
-            }
-        }
+        data = JSON.stringify(data);
+
+        Games[result].Player1Response.write('data: ' + data + '\n\n');
+        Games[result].Player2Response.write('data: ' + data + '\n\n');
     }
 }
 
 function leave(request, response) {
 
-    let BodyData = {};
+    let BodyData = "";
 
     request.on('data', chunk => {
-        BodyData = chunk;
+        BodyData += chunk;
     });
 
     request.on('end', () => {
         BodyData = JSON.parse(BodyData);
 
-
-        if (BodyData.nick == null || BodyData.pass == null || BodyData.game == null) {
+        if (BodyData.nick === undefined || BodyData.pass === undefined || BodyData.game === undefined) {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
                 error: "Data is undefined"
             }));
             return;
         }
 
-        let i;
-        let winner = null;
-        let GameFound = 0;
-
-        for (i in Games) {
-            if (Games[i].Player1 == BodyData.nick || Games[i].Player2 == BodyData.nick) {
-                GameFound = 1;
-                if (Games[i].Player2Response == null) {
-
-                    let Data = {
-                        'winner': winner,
-                        'board': Games[i].Board,
-                        'turn': Games[i].Turn,
-                        'dark': Games[i].NPlayer1,
-                        'light': Games[i].NPlayer2
-                    };
-
-                    Data = JSON.stringify(Data);
-                    Games[i].Player1Response.write('data: ' + Data + '\n\n');
-                    Games[i].Player1Response.end();
-                    Games.splice(i, 1);
-                    response.writeHead(200, headers.plain);
-                    response.end();
-                    return;
-
-                } else if (Games[i].Player2Response != null && Games[i].Player1Response != null) {
-
-                    if (Games[i].Player1 == BodyData.nick) {
-                        winner = Games[i].Player2;
-                    } else {
-                        winner = Games[i].Player1;
-                    }
-
-                    let Data = {
-                        'winner': winner,
-                        'board': Games[i].Board,
-                        'turn': Games[i].Turn,
-                        'dark': Games[i].NPlayer1,
-                        'light': Games[i].NPlayer2
-                    };
-
-                    Data = JSON.stringify(Data);
-                    Games[i].Player1Response.write('data: ' + Data + '\n\n');
-                    Games[i].Player2Response.write('data: ' + Data + '\n\n');
-                    Games[i].Player1Response.end();
-                    Games[i].Player2Response.end();
-                    Games.splice(i, 1);
-                    response.writeHead(200, headers.plain);
-                    response.end();
-                    return;
-                }
-            }
+        if (!CheckNickPass(BodyData.nick, BodyData.pass)) {
+            WriteAnswer(response, 401, headers.plain, JSON.stringify({
+                "error": "Nick and Pass don't match"
+            }));
+            return;
         }
 
-        if (GameFound == 0) {
+        let result = CheckGame(BodyData.game);
+        if (result == -1) {
             WriteAnswer(response, 400, headers.plain, JSON.stringify({
-                error: "Game not found"
+                "error": "Game not found"
             }));
+            return;
+        } else if (Games[result].Player1 != BodyData.nick && Games[result].Player2 != BodyData.nick) {
+            WriteAnswer(response, 400, headers.plain, JSON.stringify({
+                "error": "Don't exist players with that nick in the game"
+            }));
+            return;
+        }
+
+        let winner = null;
+
+        if (Games[result].Player2Response == null) {
+
+            let Data = {
+                'winner': winner,
+                'board': Games[result].Board,
+                'turn': Games[result].Turn,
+                'dark': Games[result].NPlayer1,
+                'light': Games[result].NPlayer2
+            };
+
+            Data = JSON.stringify(Data);
+            Games[result].Player1Response.write('data: ' + Data + '\n\n');
+            Games[result].Player1Response.end();
+            Games.splice(i, 1);
+            EndResponse(response, 200, headers.plain);
+            return;
+
+        } else if (Games[result].Player2Response != null && Games[result].Player1Response != null) {
+
+            if (Games[result].Player1 == BodyData.nick) {
+                winner = Games[result].Player2;
+                UpdateJSON(Games[i].Player2, Games[i].Player1);
+            } else {
+                winner = Games[result].Player1;
+                UpdateJSON(Games[i].Player1, Games[i].Player2);
+            }
+
+            let Data = {
+                'winner': winner,
+                'board': Games[result].Board,
+                'turn': Games[result].Turn,
+                'dark': Games[result].NPlayer1,
+                'light': Games[result].NPlayer2
+            };
+
+            Data = JSON.stringify(Data);
+            Games[result].Player1Response.write('data: ' + Data + '\n\n');
+            Games[result].Player2Response.write('data: ' + Data + '\n\n');
+            Games[result].Player1Response.end();
+            Games[result].Player2Response.end();
+            Games.splice(i, 1);
+            EndResponse(response, 200, headers.plain);
+            return;
         }
     });
 }
 
 //Funções Auxiliares
-
-function CheckNickPass(nick, pass){
+function CheckNickPass(nick, pass) {
     let FileData = JSON.parse(fs.readFileSync('data.json'));
-    
+
     const hash = crypto.createHash('md5').update(pass).digest('hex');
-    
-    for(i in FileData.Data)
-        if(FileData.Data[i].nick == nick && FileData.Data[i].pass == hash) return true;
+
+    for (i in FileData.Data)
+        if (FileData.Data[i].nick == nick && FileData.Data[i].pass == hash) return true;
 
     return false;
 }
 
-function CheckGame(game){
-    
-    for(i in Games)
-        if(Games[i].Hash === game) return i;
-    
+function CheckGame(game) {
+
+    for (i in Games)
+        if (Games[i].Hash === game) return i;
+
     return -1;
 }
 
@@ -598,34 +613,28 @@ function analiseNeighbors(Game, i, j, option) {
 
             let r = i + dr;
             let c = j + dc;
-            //z = returnId(r, c);
 
-            //console.log("Game.Board[r][c]: " + Game.Board[r][c] + "   " + Game.Turn);
             if ((dc == 0 && dr == 0) || r < 0 || c < 0 || r > 7 || c > 7 || (Game.Board[r][c] == "null") || Game.Board[r][c] == Turn) {
                 continue;
             } else {
                 let count = 0;
 
                 while (r >= 0 && c >= 0 && r <= 7 && c <= 7 && Game.Board[r][c] != Turn && Game.Board[r][c] != "null") {
-                    //console.log("Diferente:    Game.Board[r][c]: " + Game.Board[r][c] + "   " + Game.Turn);
                     r += dr;
                     c += dc;
-                    //z = returnId(r, c);
                     count++;
                 }
 
                 if (r >= 0 && c >= 0 && r <= 7 && c <= 7 && Game.Board[r][c] == Turn && count >= 1) {
-                    //console.log("Aqui?");
                     if (option == 1) {
                         while (count != -1) {
                             r = r - dr;
                             c = c - dc;
-                            //z = returnId(r, c);
+
                             Game.Board[r][c] = Turn;
                             count--;
                         }
                     }
-                    //contarPecas();
                     status = 1;
                 }
             }
@@ -693,24 +702,39 @@ function CheckSkip(game) {
 
 function CheckEndGame(game) {
 
-    console.log("1: " + game.Turn);
     if (CheckSkip(game) == true) {
         SwapTurn(game);
         if (CheckSkip(game) == true) {
             return true;
         } else {
             SwapTurn(game);
-            console.log("2: " + game.Turn);
         }
     }
 
     return false;
 }
 
-
 function SwapTurn(Game) {
 
     if (Game.Turn == Game.Player1) Game.Turn = Game.Player2;
     else Game.Turn = Game.Player1;
 
+}
+
+function UpdateJSON(winner, loser) {
+
+    let FileData = JSON.parse(fs.readFileSync('data.json'));
+
+    for (i in FileData.Data) {
+        if (FileData.Data[i].nick == winner) {
+            FileData.Data[i].games = FileData.Data[i].games + 1;
+            FileData.Data[i].victories = FileData.Data[i].victories + 1;
+        }else if(FileData.Data[i].nick == loser){
+            FileData.Data[i].games = FileData.Data[i].games + 1;
+        }
+    }
+  
+    fs.writeFile('data.json', JSON.stringify(FileData), function (err) {
+        if (err) throw err;
+    });
 }

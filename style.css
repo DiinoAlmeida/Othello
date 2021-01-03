@@ -30,6 +30,11 @@ h1 {
     border-radius: 3px;
 }
 
+h2,h3{
+    text-decoration: underline;
+    text-decoration-color: skyblue;
+}
+
 #myBtn {
     position: absolute;
     margin-top: 300px;
